@@ -1,7 +1,5 @@
 require File.dirname(__FILE__)+'/spec_helper'
 
-include Spidie
-
 describe "spider database" do
   it 'should store a page by url' do
     url = 'http://www.google.com'

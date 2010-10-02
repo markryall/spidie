@@ -1,0 +1,3 @@
+use bundler to specify dependencies?  or does gem already do that
+
+why does it take so long for test to run
