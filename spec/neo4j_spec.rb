@@ -1,3 +1,4 @@
+require File.dirname(__FILE__)+'/spec_helper'
 require 'neo4jr-simple'
 
 Neo4jr::Configuration.database_path = File.join(File.expand_path(File.dirname(__FILE__)), 'test-spider-database')
