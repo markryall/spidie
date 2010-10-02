@@ -3,7 +3,7 @@ module Spidie
     @queue = :urls
     
     def self.perform url
-      puts "doing job with url #{url}"
+      puts "doing job hardcore with url #{url}"
     end
   end
 end
