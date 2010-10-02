@@ -29,4 +29,4 @@ In the third shell, start up a worker
 
 In the last, you can start enqueuing some urls for spidie to crawl:
 
-    ./bin/enqueue http://github.com/markryall/spidie
+    ./bin/enspidie http://github.com/markryall/spidie
