@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+$: << File.dirname(__FILE__)+'/../lib'
+
+require 'rubygems'
+require 'resque'
+require 'spidie/job'
+
+Resque.enqueue Spidie::Job, ARGV.shift

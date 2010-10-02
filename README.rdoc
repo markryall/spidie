@@ -1,0 +1,32 @@
+= spidie
+
+An experimental web spider gem with resque, neo4j and other gratuitous dependencies.
+
+== Rationale
+
+This cannot be justified at this point in time.
+
+== Installation
+
+Prerequisites (on mac os x) are set up as follows:
+
+* brew install redis
+* gem install resque
+
+== Starting
+
+In the first shell, start redis:
+
+    rake redis
+
+In the second shell, start up the resque web interface
+
+    resque-web
+
+In the third shell, start up a worker
+
+    QUEUE=urls rake resque:work
+
+In the last, you can start enqueuing some urls for spidie to crawl:
+
+    ./bin/enqueue http://github.com/markryall/spidie
