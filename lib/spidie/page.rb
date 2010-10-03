@@ -3,5 +3,9 @@ module Spidie
     def store
       
     end
+    
+    def self.retrieve url
+      Page.new
+    end
   end
 end
