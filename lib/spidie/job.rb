@@ -15,13 +15,6 @@ module Spidie
       page.links.each do |link|
         Resque.enqueue Spidie::Job, link
       end
-=begin
-      LinkExtractor.new(url).each do |link|
-        puts link
-        #Resque.enqueue Spidie::Job, url
-      end
-=end
-
     end
   end
 end

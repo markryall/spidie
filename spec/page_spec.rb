@@ -8,12 +8,10 @@ describe "page" do
   end
   
   it "should get a page from the interwebs" do
-=begin
-    page = Page.retrieve("url")
+    url =  File.dirname(__FILE__)+'/test_0.html'
+    page = Page.retrieve(url)
        
-       page.url.should == "url"
-       page.links.should == ["http://link1", "http://link2"]
-=end
-   
+    page.url.should == url
+    page.links.should == ["http://link1", "http://link2", "http://link3"]
   end
 end
