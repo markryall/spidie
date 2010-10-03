@@ -1,3 +1,47 @@
 use bundler to specify dependencies?  or does gem already do that
 
-why does it take so long for test to run
+- the dependencies are already specified in gemspec - save this script (call it 'collect_gems') somewhere on your path, make it executable and it'll load any required gems when required:
+
+----
+#!/usr/bin/env ruby
+
+require 'rubygems'
+ 
+module GemCollector
+  extend self
+ 
+  # Shadow Kernel#gem, extending it to auto-install missing gems
+  def gem(name, *version_requirements)
+    dependency = Gem::Dependency.new(name, *version_requirements)
+    if Gem.source_index.search(dependency).empty?
+      puts "Installing #{dependency}"
+      `gem install #{name} --version \"#{version_requirements.first}\"`
+    else
+      puts "#{dependency} is already installed"
+    end
+  end
+
+  def eval_block &block
+    instance_eval &block
+  end
+
+  def eval(*args)
+    instance_eval(*args)
+  end
+ 
+  def load(file)
+    eval(File.read(file), file)
+  end
+end
+
+if __FILE__ == $0
+  path = ARGV.shift
+  path ||= 'Gemfile'
+  GemCollector.load(path) if File.exist?(path)
+  Gem::Specification.load('gemspec').dependencies.each { |dep| GemCollector.eval_block { gem dep.name, dep.requirement } } if File.exist?('gemspec')
+end
+---
+
+why does it take so long for test to run?
+
+- mostly waiting for the jvm to load
