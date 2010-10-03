@@ -1,3 +1,5 @@
 add spec to rake
 
 the page.store calling the Store module method is a bit different - would ppl normally make Store an object? or a mixin?
+
+i'd like to know the diff btw a 404 and a domain not found

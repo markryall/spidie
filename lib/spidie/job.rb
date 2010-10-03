@@ -1,5 +1,4 @@
 require 'resque'
-require 'spidie/link_extractor'
 require 'spidie/page'
 
 module Spidie
