@@ -5,4 +5,3 @@ require 'spidie/store'
 require 'spidie/job'
 
 include Spidie
-

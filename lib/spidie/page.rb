@@ -4,7 +4,7 @@ module Spidie
       
     end
     
-    def self.retrieve
+    def self.retrieve url
       Page.new
     end
   end
