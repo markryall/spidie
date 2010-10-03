@@ -10,7 +10,7 @@ module Spidie
       puts "grabbing #{url}"
       
       page = PageGrabber.grab(url)
-      puts page.inspect      page.store()
+      page.store
       
       page.links.each do |link|
         Resque.enqueue Spidie::Job, link
