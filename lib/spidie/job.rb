@@ -1,6 +1,6 @@
 require 'resque'
 require 'spidie/link_extractor'
-require 'spidie/page_grabber'
+require 'spidie/page'
 
 module Spidie
   module Job
@@ -9,8 +9,8 @@ module Spidie
     def self.perform url
       puts "grabbing #{url}"
       
-      page = PageGrabber.grab(url)
-      puts page.inspect      page.store()
+      page = Page.retrieve(url)
+      page.store()
       
       page.links.each do |link|
         Resque.enqueue Spidie::Job, link
