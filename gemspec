@@ -15,11 +15,12 @@ EOF
   spec.files = Dir['lib/**/*'] + Dir['bin/*'] + ['README.rdoc', 'MIT-LICENSE']
   spec.executables << 'enspidie'
 
-  spec.add_dependency 'resque', '~>1.10.0'
-  spec.add_dependency 'nokogiri', '~>1.4.3.1'
-  spec.add_dependency 'neo4jr-simple', '~>0.2.2'
-
+  spec.add_development_dependency 'jruby-openssl', '~>0.7.1'
   spec.add_development_dependency 'rake', '~>0.8.7'
   spec.add_development_dependency 'gemesis', '~>0.0.3'
   spec.add_development_dependency 'rspec', '~>1.3.0'
+
+  spec.add_dependency 'resque', '~>1.10.0'
+  spec.add_dependency 'nokogiri', '~>1.4.3.1'
+  spec.add_dependency 'neo4jr-simple', '~>0.2.2'
 end
