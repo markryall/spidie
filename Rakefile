@@ -13,3 +13,11 @@ end
 task :redis do
   sh "redis-server /usr/local/etc/redis.conf &"
 end
+
+task :spec => [:clean] do
+  sh 'spec spec'
+end
+
+task :clean do
+  rm_rf 'tmp/test-spider-database'
+end

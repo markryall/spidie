@@ -2,9 +2,8 @@ require 'neo4jr-simple'
 
 module Spidie
   module Store
-    
-    Neo4jr::Configuration.database_path = File.join(File.expand_path(File.dirname(__FILE__)), 'test-spider-database')
-    
+    Neo4jr::Configuration.database_path = File.dirname(__FILE__)+'/../../tmp/test-spider-database'
+
     def self.put page
       Neo4jr::DB.execute do |neo|
         node = neo.createNode
@@ -13,10 +12,10 @@ module Spidie
     end
 
     def self.retrieve url
-      page = Neo4jr::DB.execute do |neo|
-        neo.find_node_by_identifier(url)
+      node = Neo4jr::DB.execute do |neo|
+        neo.find_node_by_identifier("page.url")
       end
-      Page.new page[:identifier]
+      Page.new node[:identifier]
     end
   end
 end

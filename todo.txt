@@ -45,3 +45,13 @@ end
 why does it take so long for test to run?
 
 - mostly waiting for the jvm to load
+
+
+process quit hell
+- start the queue , ctrl-c and it will exit after a pause
+- enqueue a job that stores link in node4j, ctrl-c will no longer work no longer how long you patiently wait
+- run fun.rb and it will quit after ctrl-c (after a pause - uncertain whether it is the same length of the time as the first pause) , otherwise, it will never end
+
+hypothesis - neo4j launches a thread and the joins it... 
+
+get ola to look into this
