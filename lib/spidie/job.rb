@@ -1,5 +1,4 @@
 require 'resque'
-require 'spidie/link_extractor'
 require 'spidie/page'
 require 'spidie/store'
 
@@ -11,6 +10,7 @@ module Spidie
       puts "grabbing #{url}"
 
       Store.put Page.new(url, [])
+
       #page = Page.retrieve(url)
       #page.store
       # 
@@ -33,7 +33,7 @@ module Spidie
       node = Neo4jr::DB.execute do |neo|
         neo.find_node_by_identifier(url)
       end
-      
+
       if node[:identifier] == url 
         File.open("success", "w") {|f| f.puts "something" }
       end
