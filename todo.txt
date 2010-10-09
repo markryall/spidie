@@ -10,3 +10,5 @@ hypothesis - neo4j launches a thread and the joins it...
 get ola to look into this
 
 i'd like to know the diff btw a 404 and a domain not found
+
+named params would be nice. eg HttpResponse.new(:status => 200, :content => html) instead of HttpResponse.new(200, html)

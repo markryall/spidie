@@ -5,7 +5,7 @@ describe "spider database" do
   it 'should store a page by url' do
     url = 'http://www.google.com'
 
-    page = Page.new(url)
+    page = Page.new(url, [])
     Store.put(page)
 
     found_page = Store.retrieve(url)
