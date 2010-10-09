@@ -10,8 +10,20 @@ task :environment do
   require 'spidie/job'
 end
 
-task :redis do
-  sh "redis-server /usr/local/etc/redis.conf &"
+namespace :redis do
+  desc 'start redis'
+  task :start do
+    puts "'daemonise yes' in /usr/local/etc/redis.conf or this task will block"
+    system "redis-server /usr/local/etc/redis.conf"
+  end
+
+  desc 'stop redis'
+  task :stop do
+    system "kill #{File.read('/usr/local/var/run/redis.pid')}"
+  end
+end
+
+task :agent do
 end
 
 task :spec => [:clean] do
