@@ -12,8 +12,9 @@ module Spidie
     end
 
     def self.retrieve url
+      puts Neo4jr::Configuration.database_path 
       node = Neo4jr::DB.execute do |neo|
-        neo.find_node_by_identifier("page.url")
+        neo.find_node_by_identifier(url)
       end
       Page.new node[:identifier]
     end

@@ -9,18 +9,13 @@ module Spidie
     def self.perform url
       puts "grabbing #{url}"
 
-      Store.put Page.new(url, [])
-
-      #page = Page.retrieve(url)
-      #page.store
-      # 
-      #page.links.each do |link|
-      #   Resque.enqueue Spidie::Job, link
-      # end
-      LinkExtractor.new(url).each do |link|
-        puts link
-        #Resque.enqueue Spidie::Job, url
+      page = Page.retrieve(url)
+      page.store
+      
+      page.links.each do |link|
+        Resque.enqueue Spidie::Job, link
       end
+      
     end
   end
   

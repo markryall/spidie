@@ -9,10 +9,8 @@ module Spidie
     end
         
     def self.retrieve url
-      page = Page.new
-      page.url = url
-      page.links = Nokogiri::HTML(open(url)).css('a').map{|link| link['href']}.select{|url| url != nil}
-      page
+      links = Nokogiri::HTML(open(url)).css('a').map{|link| link['href']}.select{|url| url != nil}
+      Page.new(url, links)
     end
   end
 end

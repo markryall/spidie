@@ -8,10 +8,19 @@ describe "page" do
   end
   
   it "should get a page from the interwebs" do
-    url =  File.dirname(__FILE__)+'/test_0.html'
+    pending
+    links = ["http://link1", "http://link2", "http://link3"]
+    url = "url"
+    content = "some html"
+    
+    HttpGet.should_recieve(:get).with(url).and_return HttpResponse.new(200, content)
+    HtmlParser.should_receive(:extract_links).with(content).and_return links
+    
     page = Page.retrieve(url)
        
     page.url.should == url
-    page.links.should == ["http://link1", "http://link2", "http://link3"]
+    page.links.should == links
+    page.broken?.should be_false
   end
+  
 end
