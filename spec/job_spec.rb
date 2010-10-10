@@ -1,6 +1,4 @@
 require File.dirname(__FILE__)+'/spec_helper'
-
-
 describe "job" do
   it "should fetch a page, store it and enqueue the links" do
     url, link1, link2= "url",  "http://link1",  "http://link2"

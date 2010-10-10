@@ -9,13 +9,14 @@ module Spidie
     def self.perform url
       puts "grabbing #{url}"
 
+      Store.put Page.new(url, [])
+
       page = Page.retrieve(url)
       page.store
       
       page.links.each do |link|
         Resque.enqueue Spidie::Job, link
       end
-      
     end
   end
   
@@ -24,12 +25,9 @@ module Spidie
 
     def self.perform url
       puts "asked to verify existance of #{url}"
-      Neo4jr::Configuration.database_path = File.dirname(__FILE__)+'/../tmp/test-spider-database'
-      node = Neo4jr::DB.execute do |neo|
-        neo.find_node_by_identifier(url)
-      end
+      node = Neo4j::Node.find('url: '+ url).first
 
-      if node[:identifier] == url 
+      if node[:url] == url 
         File.open("success", "w") {|f| f.puts "something" }
       end
     end

@@ -1,22 +1,25 @@
-require 'neo4jr-simple'
+require 'neo4j'
 
 module Spidie
-  module Store
-    Neo4jr::Configuration.database_path = File.dirname(__FILE__)+'/../../tmp/test-spider-database'
+  class PageNode
+    include Neo4j::NodeMixin
+    property :url
+    index :url
+  end
 
+  module Store
     def self.put page
-      Neo4jr::DB.execute do |neo|
-        node = neo.createNode
-        node[:identifier] = page.url
+      Neo4j::Transaction.run do |neo|
+        node = PageNode.new
+        node.url = page.url
       end
     end
 
     def self.retrieve url
-      puts Neo4jr::Configuration.database_path 
-      node = Neo4jr::DB.execute do |neo|
-        neo.find_node_by_identifier(url)
+      Neo4j::Transaction.run do
+        node = PageNode.find(:url => url).first
+        Page.new node.url
       end
-      Page.new node[:identifier]
     end
   end
 end
