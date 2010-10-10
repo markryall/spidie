@@ -9,6 +9,7 @@ describe 'the spider, the spider' do
   end
   
   it 'should consume with eagerness the url for a page with no links' do
+    
     url = 'http://localhost:4567/hi.html'
 
     Resque.enqueue Spidie::Job, url
@@ -24,12 +25,3 @@ describe 'the spider, the spider' do
 end
 
 
-
-# start redis
-# start resque agent
-# run enspidie with a url
-
-# ... awesomeness
-
-
-# 

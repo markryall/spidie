@@ -25,9 +25,13 @@ module Spidie
 
     def self.perform url
       puts "asked to verify existance of #{url}"
-      node = Neo4j::Node.find('url: '+ url).first
+      
+      node = nil
+      Neo4j::Transaction.run do
+        node = PageNode.find(:url => url).first
+      end
 
-      if node[:url] == url 
+      if node and node.url == url 
         File.open("success", "w") {|f| f.puts "something" }
       end
     end

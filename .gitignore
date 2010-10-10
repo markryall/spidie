@@ -2,3 +2,5 @@ test-spider-database
 redis.log
 worker.log
 tmp
+fake_webserver.log
+success

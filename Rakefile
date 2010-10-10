@@ -62,7 +62,7 @@ task :tail_spider do
 end
 
 desc 'start spider'
-task :start_spider => [:redis, :start_worker, :resque_web, :tail_spider] do
+task :start_spider => [:redis, :start_worker] do
 end
 
 desc 'kill spider'
@@ -70,6 +70,21 @@ task :squash_spider do
   sh "ps auxw | grep 'resque:work\\|redis' | grep -v grep | awk '{print \$2}' |xargs kill -9"
 end
 
+desc 'start fake webserver for returning web pages'
+task :start_webserver do
+  sh "ruby spec/test_application.rb > fake_webserver.log 2>&1 &"
+end
+
+desc 'run acceptance tests, starts up spider and fake webserver first'
+task :acceptance_tests => [:start_spider, :start_webserver] do
+  sleep 10
+  sh "spec spec/end2end.rb"
+end
+
+desc 'run acceptance tests assuming spider and fake webserver already running'
+task :acceptance_tests_nostart do
+  sh "spec spec/end2end.rb"
+end
  
 
 
