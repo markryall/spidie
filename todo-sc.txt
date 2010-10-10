@@ -4,7 +4,7 @@ IDEAS
 - make end2end test use this ReportJob and make assertions about it
 
 CURRENT
-
+- if status is not 200, mark page as broken
 
 DONE
 - change page retrieval so we can store the http status
