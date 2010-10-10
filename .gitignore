@@ -1,1 +1,3 @@
 test-spider-database
+redis.log
+worker.log
