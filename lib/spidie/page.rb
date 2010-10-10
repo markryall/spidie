@@ -6,27 +6,30 @@ require 'spidie/html_parser'
 
 module Spidie
   class Page 
-    attr_reader :url, :links
+    attr_reader :url
+    attr_accessor :links, :broken
     
-    def initialize(url, links)
+    def initialize(url)
       @url= url
-      @links = links || []
+      @links = []
+      @broken = false
+    end
+    
+    def broken?
+      @broken
     end
     
     def store
       Store.put self
     end
     
-    def broken?
-      @links.empty? 
-    end
-        
     def self.retrieve url
       client = HTTPClient.new
       result = client.get(url)
       
-      links = HtmlParser.extract_links result.content
-      Page.new(url, links)
+      page = Page.new(url)
+      page.links = HtmlParser.extract_links result.content
+      page
     end
   end
 end

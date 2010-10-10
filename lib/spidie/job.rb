@@ -9,7 +9,7 @@ module Spidie
     def self.perform url
       puts "grabbing #{url}"
 
-      Store.put Page.new(url, [])
+      Store.put Page.new(url)
 
       page = Page.retrieve(url)
       page.store

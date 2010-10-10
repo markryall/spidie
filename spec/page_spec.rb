@@ -2,17 +2,20 @@ require File.dirname(__FILE__)+'/spec_helper'
 
 describe "page" do
   it "should store itself" do
-    page = Page.new("bla",[])
+    page = Page.new("bla")
     Store.should_receive(:put).with(page)
     page.store
   end
   
-  it "should have empty links array if links are nil" do
-    p = Page.new("foo", nil)
+  it "should be initialised sensibly" do
+    p = Page.new("foo")
     p.links.should == []
+    p.broken?.should be_false
   end
-  
-  it "should get a page from the interwebs" do
+end
+
+describe "page retrieve" do
+  it "should retrieve a health page" do
     links = ["http://link1", "http://link2", "http://link3"]
     url = "url"
     
@@ -31,4 +34,8 @@ describe "page" do
     page.broken?.should be_false
   end
   
+  
 end
+  
+  
+  
