@@ -18,7 +18,7 @@ module Spidie
     def self.retrieve url
       Neo4j::Transaction.run do
         node = PageNode.find(:url => url).first
-        Page.new node.url
+        Page.new node.url, []
       end
     end
   end

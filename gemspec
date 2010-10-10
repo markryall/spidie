@@ -23,4 +23,5 @@ EOF
   spec.add_dependency 'resque', '~>1.10.0'
   spec.add_dependency 'nokogiri', '~>1.4.3.1'
   spec.add_dependency 'neo4j', '~>0.4.6'
+  spec.add_dependency 'httpclient', '~>2.1.5'
 end

@@ -4,9 +4,10 @@ IDEAS
 - make end2end test use this ReportJob and make assertions about it
 
 CURRENT
-- work on pending spec - change page retrieval so we can store the http status
+
 
 DONE
+- change page retrieval so we can store the http status
 - add end2end test to build
 - added convenience tasks
 - got specs passing
