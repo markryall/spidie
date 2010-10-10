@@ -28,7 +28,8 @@ module Spidie
       result = client.get(url)
       
       page = Page.new(url)
-      page.links = HtmlParser.extract_links result.content
+      page.broken = true if result.status != 200
+      page.links = HtmlParser.extract_links result.content unless page.broken
       page
     end
   end
