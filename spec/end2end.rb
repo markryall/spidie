@@ -17,7 +17,7 @@ describe 'the spider, the spider' do
     
     20.times do
       break if File.exists?("success")
-      sleep 0.2
+      sleep 1
     end
     
     raise 'timed out waiting for success' unless File.exists?("success") 

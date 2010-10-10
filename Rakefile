@@ -10,6 +10,7 @@ task :environment do
   require 'spidie/job'
 end
 
+task :default => [:spec, :acceptance_tests]
 
 namespace :redis do
   desc 'start redis'
@@ -27,13 +28,13 @@ end
 task :agent do
 end
 
-task :spec => [:clean] do
+task :spec => [:squash_spider, :clean] do
   sh 'spec spec'
 end
 
 desc 'clean'
 task :clean do
-  rm_rf 'tmp/test-spider-database'
+  rm_rf 'tmp'
 end
 
 desc 'start redis'
@@ -76,7 +77,7 @@ task :start_webserver do
 end
 
 desc 'run acceptance tests, starts up spider and fake webserver first'
-task :acceptance_tests => [:start_spider, :start_webserver] do
+task :acceptance_tests => [:squash_spider, :clean, :start_webserver, :start_spider,] do
   sleep 10
   sh "spec spec/end2end.rb"
 end
