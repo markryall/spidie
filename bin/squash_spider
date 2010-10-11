@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rake squash_spider

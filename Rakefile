@@ -2,7 +2,6 @@ Gem::Specification.load('gemspec').dependencies.each { |dep| gem dep.name, dep.r
 
 require 'gemesis/rake'
 require 'resque/tasks'
-require 'neo4j'
 
 task "resque:setup" => :environment
 
