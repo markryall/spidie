@@ -22,9 +22,9 @@ describe "page retrieve" do
   end
   
   it "should retrieve a health page" do
+    pending
     links = ["http://link1", "http://link2", "http://link3"]
-    
-    
+
     result = OpenStruct.new(:content => "some html", :status => 200)
     @httpclient.should_receive(:get).with(@url).and_return result
     
