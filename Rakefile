@@ -2,6 +2,7 @@ Gem::Specification.load('gemspec').dependencies.each { |dep| gem dep.name, dep.r
 
 require 'gemesis/rake'
 require 'resque/tasks'
+require 'neo4j'
 
 task "resque:setup" => :environment
 
@@ -77,7 +78,8 @@ task :start_webserver do
 end
 
 desc 'run acceptance tests, starts up spider and fake webserver first'
-task :acceptance_tests => [:squash_spider, :clean, :start_webserver, :start_spider,] do
+task :acceptance_tests => [:squash_spider, :start_webserver, :start_spider,] do
+  Rake::Task[:clean].execute
   sleep 10
   sh "spec spec/end2end.rb"
 end
