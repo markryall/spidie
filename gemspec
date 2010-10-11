@@ -19,6 +19,7 @@ EOF
   spec.add_development_dependency 'rake', '~>0.8.7'
   spec.add_development_dependency 'gemesis', '~>0.0.3'
   spec.add_development_dependency 'rspec', '~>1.3.0'
+  spec.add_development_dependency 'markaby', '~>0.7.1'
 
   spec.add_dependency 'resque', '~>1.10.0'
   spec.add_dependency 'nokogiri', '~>1.4.3.1'
