@@ -9,12 +9,11 @@ module Spidie
     attr_reader :url
     attr_accessor :links, :broken
     
-    def initialize(url)
-      @url= url
+    def initialize url, broken=false
+      @url, @broken = url, broken
       @links = []
-      @broken = false
     end
-    
+
     def broken?
       @broken
     end
