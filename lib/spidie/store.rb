@@ -12,7 +12,7 @@ module Spidie
     property :broken
     index :url
 
-    has_n(:links_to).to(PageNode)
+    has_n(:links).to(PageNode)
   end
 
   module Store
@@ -21,7 +21,7 @@ module Spidie
         node = PageNode.create_from page
         page.links.each do |linked_page|
           linked_node = PageNode.create_from linked_page
-          node.links_to.new linked_node
+          node.links << linked_node
         end
       end
     end
@@ -30,7 +30,7 @@ module Spidie
       Neo4j::Transaction.run do
         node = PageNode.find(:url => url).first
         page = Page.new(node.url, node.broken)
-        node.links_to.each do |linked_node|
+        node.links.each do |linked_node|
           page.links << Page.new(linked_node.url, linked_node.broken)
         end
         page
