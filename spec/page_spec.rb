@@ -22,7 +22,6 @@ describe "page retrieve" do
   end
   
   it "should retrieve a health page" do
-    pending
     links = ["http://link1", "http://link2", "http://link3"]
 
     result = OpenStruct.new(:content => "some html", :status => 200)
@@ -33,7 +32,7 @@ describe "page retrieve" do
     page = Page.retrieve(@url)
        
     page.url.should == @url
-    page.links.should == links
+    page.links.map{|page| page.url}.should == links
     page.broken?.should be_false
   end
   
