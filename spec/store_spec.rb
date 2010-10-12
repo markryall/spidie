@@ -1,6 +1,5 @@
 require File.dirname(__FILE__)+'/spec_helper'
 
-
 describe "spider database" do
   before do
     Neo4j::Transaction.run { Neo4j.all_nodes {|node| node.del }}
