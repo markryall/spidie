@@ -15,13 +15,18 @@ task :default => [:spec, :acceptance_tests]
 namespace :redis do
   desc 'start redis'
   task :start do
-    puts "'daemonise yes' in /usr/local/etc/redis.conf or this task will block"
-    system "redis-server /usr/local/etc/redis.conf"
+    if File.exist? '/usr/local/var/run/redis.pid'
+      puts 'redis already seems to be running'
+    else
+      puts "'daemonise yes' in /usr/local/etc/redis.conf or this task will block"
+      system "redis-server /usr/local/etc/redis.conf"
+    end
   end
 
   desc 'stop redis'
   task :stop do
     system "kill #{File.read('/usr/local/var/run/redis.pid')}"
+    FileUtils.rm '/usr/local/var/run/redis.pid' if File.exist? '/usr/local/var/run/redis.pid'
   end
 end
 

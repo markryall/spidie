@@ -27,7 +27,7 @@ module Spidie
 
       page = Page.new(url)
       page.broken = true if result.status != 200
-      page.links = HtmlParser.extract_links(result.content).map{|link| Page.new link } unless page.broken
+      page.links = HtmlParser.new(url).extract_links(result.content).map{|link| Page.new link } unless page.broken
       page
     end
   end

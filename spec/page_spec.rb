@@ -19,21 +19,22 @@ describe "page retrieve" do
     @url = "url"
     @httpclient = mock("client")
     HTTPClient.should_receive(:new).and_return @httpclient
+    @http_parser = stub('http_parser')
+    HtmlParser.stub!(:new).and_return @http_parser
   end
   
   it "should retrieve a health page" do
-    pending
     links = ["http://link1", "http://link2", "http://link3"]
 
     result = OpenStruct.new(:content => "some html", :status => 200)
     @httpclient.should_receive(:get).with(@url).and_return result
     
-    HtmlParser.should_receive(:extract_links).with(result.content).and_return links
-    
+    @http_parser.should_receive(:extract_links).with(result.content).and_return links
+
     page = Page.retrieve(@url)
        
     page.url.should == @url
-    page.links.should == links
+    page.links.map{|page| page.url}.should == links
     page.broken?.should be_false
   end
   
@@ -41,7 +42,7 @@ describe "page retrieve" do
     result = OpenStruct.new(:status => 404)
 
     @httpclient.should_receive(:get).with(@url).and_return result
-    HtmlParser.should_not_receive(:extract_links)
+    @http_parser.should_not_receive(:extract_links)
     
     page = Page.retrieve(@url)
        
