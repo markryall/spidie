@@ -4,3 +4,4 @@ worker.log
 tmp
 fake_webserver.log
 success
+spec/foo.rb
