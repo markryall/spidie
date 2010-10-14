@@ -10,7 +10,7 @@ module Spidie
 
     property :url
     property :broken
-    index :url
+    index :url, :broken
 
     has_n(:links).to(PageNode)
   end
