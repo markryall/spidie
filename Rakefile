@@ -5,9 +5,30 @@ require 'resque/tasks'
 
 task "resque:setup" => :environment
 
+module Pids
+  def self.exist? name
+    File.exist? path(name)
+  end
+
+  def self.persist name, pid=Process.pid
+    File.open(path(name), 'w') {|f| f.puts pid}
+  end
+
+  def self.kill name
+    system "kill #{File.read(path(name))}"
+    FileUtils.rm path(name)
+  end
+
+  def self.path name
+    FileUtils.mkdir_p 'tmp'
+    "tmp/#{name}.pid"
+  end
+end
+
 task :environment do
   $: << File.dirname(__FILE__)+'/lib'
   require 'spidie/job'
+  Pids.persist 'spidie'
 end
 
 task :default => [:spec, :acceptance_tests]
@@ -30,9 +51,6 @@ namespace :redis do
   end
 end
 
-task :agent do
-end
-
 task :spec => [:squash_spider, :clean] do
   sh 'spec spec'
 end
@@ -40,11 +58,6 @@ end
 desc 'clean'
 task :clean do
   rm_rf 'tmp'
-end
-
-desc 'start redis'
-task :redis do
-  sh "redis-server /usr/local/etc/redis.conf > redis.log 2>&1 &"
 end
 
 desc 'how to start resque-web'
@@ -58,23 +71,35 @@ task :resque_view do
   sh "open 'http://0.0.0.0:5678/overview'"
 end
 
-task :start_worker do
-  sh "QUEUE=urls rake resque:work > worker.log 2>&1 &"
+namespace :spidie do
+  task :start do
+    if Pids.exist? 'spidie'
+      puts 'the spider is already crawling'
+    else
+      puts 'the spider will be unleashed'
+      sh "QUEUE=urls rake resque:work > tmp/worker.log 2>&1 &"
+    end
+  end
+
+  task :stop do
+    if Pids.exist? 'spidie'
+      Pids.kill 'spidie'
+    else
+      puts 'the spider has not been unleashed'
+    end
+  end
 end
 
 desc 'tail spider logs'
 task :tail_spider do
-  sh "tail -f redis.log worker.log"
+  sh "tail -f worker.log"
 end
 
 desc 'start spider'
-task :start_spider => [:redis, :start_worker] do
-end
+task :start_spider => ['redis:start', 'spidie:start']
 
 desc 'kill spider'
-task :squash_spider do
-  sh "ps auxw | grep 'resque:work\\|redis' | grep -v grep | awk '{print \$2}' |xargs kill -9"
-end
+task :squash_spider => ['spidie:stop']
 
 desc 'start fake webserver for returning web pages'
 task :start_webserver do
@@ -92,6 +117,3 @@ desc 'run acceptance tests assuming spider and fake webserver already running'
 task :acceptance_tests_nostart do
   sh "spec spec/end2end.rb"
 end
- 
-
-
