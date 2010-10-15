@@ -13,6 +13,7 @@ module Spidie
       page.store
 
       page.links.each do |linked_page|
+        puts "enqueing #{linked_page.url}"
         Resque.enqueue Spidie::Job, linked_page.url
       end
     end
@@ -29,6 +30,8 @@ module Spidie
         if PageNode.find(:url => url).first
           puts 'found it'
           File.open("success", "w") {|f| f.puts "something" }
+        else
+          puts 'found it - THE OPPOSITE!'
         end
       end
     end

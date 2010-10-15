@@ -2,6 +2,8 @@ require 'rubygems'
 require 'sinatra'
 require 'markaby'
 
+File.open('tmp/test_web.pid', 'w') {|f| f.puts Process.pid }
+
 get '/0_index.html' do
   ''
 end

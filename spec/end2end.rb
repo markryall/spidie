@@ -29,7 +29,6 @@ describe 'the spider, the spider' do
   end
 
   it 'should consume with relish the url for a page with a single relative link' do
-    pending
     Resque.enqueue Spidie::Job, 'http://localhost:4567/2_index.html'
     verify_url 'http://localhost:4567/2_index.html'
     verify_url 'http://localhost:4567/2_link.html'
