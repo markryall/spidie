@@ -24,7 +24,7 @@ task :spec => [:clean] do
 end
 
 desc 'clean'
-task :clean => ['redis:stop', 'spidie:stop', 'test_web:stop'] do
+task :clean => [:stop] do
   rm_rf 'tmp'
   mkdir_p 'tmp'
 end
@@ -41,24 +41,22 @@ task :resque_view do
 end
 
 desc 'run acceptance tests, starts up spider and fake webserver first'
-task :acceptance_tests => [:clean, 'redis:start', 'test_web:start', 'spidie:start'] do
+task :acceptance_tests => [:clean, :start] do
   sh "spec spec/end2end.rb"
 end
 
-namespace :redis do
-  Pids.create_tasks :name => 'redis',
-    :command => 'redis-server /usr/local/etc/redis.conf',
-    :pid => '/usr/local/var/run/redis.pid'
-end
+desc 'starts everything'
+task :start
 
-namespace :spidie do
-  Pids.create_tasks :name => 'spidie',
-    :command => 'QUEUE=urls rake resque:work > tmp/spidie.log 2>&1 &',
-    :pid => 'tmp/spidie.pid'
-end
+desc 'stops everything'
+task :stop
 
-namespace :test_web do
-  Pids.create_tasks :name => 'test_web',
-    :command => 'ruby spec/test_application.rb > tmp/test_web.log 2>&1 &',
-    :pid => 'tmp/test_web.pid'
-end
+Pids.create_tasks :name => :redis,
+  :full_command => 'redis-server /usr/local/etc/redis.conf',
+  :pid => '/usr/local/var/run/redis.pid'
+
+Pids.create_tasks :name => :spidie,
+  :command => 'QUEUE=urls rake resque:work'
+
+Pids.create_tasks :name => :test_web,
+  :command => 'ruby spec/test_application.rb'

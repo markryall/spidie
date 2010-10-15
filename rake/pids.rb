@@ -10,27 +10,33 @@ module Pids
 
   def self.create_tasks params
     name = params[:name]
-    command = params[:command]
-    pid = params[:pid]
+    command = params[:full_command]
+    command ||= "#{params[:command]} > tmp/#{name}.log 2>&1 &"
+    pid = params[:pid] || "tmp/#{name}.pid"
 
-    desc "start #{name}"
-    task :start do
-      if File.exist? pid
-        puts "#{name} is already running"
-      else
-        puts "launching #{name}"
-        sh command
+    namespace name do
+      desc "start #{name}"
+      task :start do
+        if File.exist? pid
+          puts "#{name} is already running"
+        else
+          puts "launching #{name}"
+          sh command
+        end
+      end
+
+      desc "stop #{name}"
+      task :stop do
+        if File.exist? pid
+          puts "stopping #{name}"
+          Pids.kill pid
+        else
+          puts "#{name} was not started"
+        end
       end
     end
 
-    desc "stop #{name}"
-    task :stop do
-      if File.exist? pid
-        puts "stopping #{name}"
-        Pids.kill pid
-      else
-        puts "#{name} was not started"
-      end
-    end
+    task :stop => ["#{name}:stop"]
+    task :start => ["#{name}:start"]
   end
 end
