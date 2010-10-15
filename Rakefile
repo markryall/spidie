@@ -55,8 +55,8 @@ Pids.create_tasks :name => :redis,
   :full_command => 'redis-server /usr/local/etc/redis.conf',
   :pid => '/usr/local/var/run/redis.pid'
 
-Pids.create_tasks :name => :spidie,
-  :command => 'QUEUE=urls rake resque:work'
-
 Pids.create_tasks :name => :test_web,
   :command => 'ruby spec/test_application.rb'
+
+Pids.create_tasks :name => :spidie,
+  :command => 'QUEUE=urls rake resque:work'
