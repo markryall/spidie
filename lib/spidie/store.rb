@@ -1,40 +1,17 @@
 require 'neo4j'
 
 module Spidie
-  class PageNode
-    include Neo4j::NodeMixin
-
-    def self.create_from page
-      self.new :url => page.url, :broken => page.broken
-    end
-
-    property :url
-    property :broken
-    index :url, :broken
-
-    has_n(:links).to(PageNode)
-  end
-
   module Store
-    def self.put page
-      Neo4j::Transaction.run do 
-        node = PageNode.create_from page
-        page.links.each do |linked_page|
-          linked_node = PageNode.create_from linked_page
-          node.links << linked_node
-        end
-      end
+    def while_shopping
+      Neo4j::Transaction.run { yield }
     end
 
-    def self.retrieve url
-      Neo4j::Transaction.run do
-        node = PageNode.find(:url => url).first
-        page = Page.new(node.url, node.broken)
-        node.links.each do |linked_node|
-          page.links << Page.new(linked_node.url, linked_node.broken)
-        end
-        page
-      end
+    def create_page url, broken=false
+      Page.new :url => url, :broken => broken
+    end
+
+    def retrieve_page url
+      Page.find(:url => url).first
     end
   end
 end

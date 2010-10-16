@@ -2,33 +2,25 @@ require 'spidie/store'
 require 'nokogiri'
 require 'httpclient'
 require 'spidie/html_parser'
+require 'neo4j'
 
 module Spidie
-  class Page 
-    attr_reader :url
-    attr_accessor :links, :broken
+  class Page
+    extend Store
+    include Neo4j::NodeMixin
 
-    def initialize url, broken=false
-      @url, @broken = url, broken
-      @links = []
-    end
+    property :url
+    property :broken
+    index :url, :broken
 
-    def broken?
-      @broken
-    end
-    
-    def store
-      Store.put self
-    end
+    has_n(:links).to(Page)
 
-    def self.retrieve url
+    def self.retrieve_links_for page
       client = HTTPClient.new
-      result = client.get(url)
+      result = client.get(page.url)
 
-      page = Page.new(url)
-      page.broken = true if result.status != 200
-      page.links = HtmlParser.new(url).extract_links(result.content).map{|link| Page.new link } unless page.broken
-      page
+      page.broken = true unless result.status == 200
+      HtmlParser.new(page.url).extract_links(result.content).map{|link| create_page link } unless page.broken
     end
   end
 end

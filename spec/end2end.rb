@@ -21,7 +21,6 @@ describe 'the spider, the spider' do
     verify_url 'http://localhost:4567/0_index.html'
   end
 
-
   it 'should consume with gusto the url for a page with a single absolute link' do
     Resque.enqueue Spidie::Job, 'http://localhost:4567/1_index.html'
     verify_url 'http://localhost:4567/1_index.html'

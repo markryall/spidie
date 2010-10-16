@@ -4,17 +4,21 @@ require 'spidie/store'
 
 module Spidie
   module Job
+    extend Store
+
     @queue = :urls
-    
+
     def self.perform url
-      puts "grabbing #{url}"
+      while_shopping do
+        puts "grabbing #{url}"
 
-      page = Page.retrieve(url)
-      page.store
+        page = retrieve_page(url)
+        Page.retrieve_links_for page
 
-      page.links.each do |linked_page|
-        puts "enqueing #{linked_page.url}"
-        Resque.enqueue Spidie::Job, linked_page.url
+        page.links.each do |linked_page|
+          puts "enqueing #{linked_page.url}"
+          Resque.enqueue Spidie::Job, linked_page.url
+        end
       end
     end
   end
@@ -27,7 +31,7 @@ module Spidie
 
       node = nil
       Neo4j::Transaction.run do
-        if PageNode.find(:url => url).first
+        if Page.find(:url => url).first
           puts 'found it'
           File.open("success", "w") {|f| f.puts "something" }
         else
