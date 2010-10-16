@@ -15,8 +15,9 @@ module Spidie
       log { "Spidie:Job.perform(#{url})" }
       while_shopping do
         if retrieve_page(url)
-          log { "  already visited #{url}" }
+          log { "skipping already visited page" }
         else
+          log { "creating new page" }
           page = create_page url
 
           Page.retrieve_links_for(page).each do |link|
