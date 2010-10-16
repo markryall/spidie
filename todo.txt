@@ -1,16 +1,3 @@
-the page.store calling the Store module method is a bit different - would ppl normally make Store an object? or a mixin?
-
-process quit hell
-- start the queue , ctrl-c and it will exit after a pause
-- enqueue a job that stores link in node4j, ctrl-c will no longer work no longer how long you patiently wait
-- run fun.rb and it will quit after ctrl-c (after a pause - uncertain whether it is the same length of the time as the first pause) , otherwise, it will never end
-
-hypothesis - neo4j launches a thread and the joins it... 
-
-get ola to look into this
-
 i'd like to know the diff btw a 404 and a domain not found
 
 named params would be nice. eg HttpResponse.new(:status => 200, :content => html) instead of HttpResponse.new(200, html)
-
-why dont my rake targets show up under rake -T

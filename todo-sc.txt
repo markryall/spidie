@@ -2,14 +2,7 @@ IDEAS
 
 - make end2end test use this ReportJob and make assertions about it
 - give the report job  a high priority
-- make PageNode and Page the same thing
 
 CURRENT
-- create a ReportJob which outputs a report as json
 
-DONE
-- if status is not 200, mark page as broken
-- change page retrieval so we can store the http status
-- add end2end test to build
-- added convenience tasks
-- got specs passing
+- create a ReportJob which outputs a report as json
