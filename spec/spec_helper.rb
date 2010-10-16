@@ -3,6 +3,7 @@ $: << File.dirname(__FILE__)+'/../lib'
 require 'spidie/page'
 require 'spidie/store'
 require 'spidie/job'
+require 'spidie/report_job'
 require 'neo4j'
 
 include Spidie

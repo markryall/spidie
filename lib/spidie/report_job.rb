@@ -1,10 +1,13 @@
 require 'spidie/logger'
 require 'spidie/store'
+require 'spidie/report'
 
 module Spidie
   module ReportJob
     extend Store
     extend Logger
+
+    @queue = :urls
 
     def self.perform
       log { "Spidie:ReportJob.perform (creating report)" }

@@ -1,23 +1,29 @@
 require File.dirname(__FILE__)+'/spec_helper.rb'
 
 require 'fileutils'
+require 'spidie/jobutils'
 require 'json'
 
+SUCCESS_FILE = 'tmp/success'
+REPORT_FILE = 'report'
+
 describe 'the spider, the spider' do
+  before(:each) do
+    Resque.enqueue Spidie::JobUtils::CleanDBJob
+    [SUCCESS_FILE, REPORT_FILE].each {|f| FileUtils.rm f, :force => true }
+  end
   
   def wait_for_file file
     10.times do
       break if File.exists?(file)
       sleep 1
     end
-    raise 'timed out waiting for #{file} file' unless File.exists?(file)
+    raise "timed out waiting for #{file} file" unless File.exists?(file)
   end
   
   def verify_url url
-    success_file = 'tmp/success'
-    FileUtils.rm success_file, :force => true
     Resque.enqueue Spidie::TestJob, url
-    wait_for_file success_file
+    wait_for_file SUCCESS_FILE
   end
   
   it 'should consume with eagerness the url for a page with no links' do
@@ -38,20 +44,14 @@ describe 'the spider, the spider' do
   end
   
   it 'should consume with eagerness the url for a page with no links and give a report' do
-    pending
-    report_file = "tmp/report"
     Resque.enqueue Spidie::Job, 'http://localhost:4567/hi.html'
+
     Resque.enqueue Spidie::ReportJob
-    
-    10.times do
-      break if File.exists?(report_file)
-      sleep 1
-    end
-    raise 'timed out waiting for report' unless File.exists?(report_file) 
-    
-    report = JSON.parse open(report_file).read
-    report.total_pages.should == 1
-    report.num_broken.should == 1
+    wait_for_file REPORT_FILE
+        
+    report = JSON.parse open(REPORT_FILE).read
+    report["total_pages"].should == 1
+    report["num_broken"].should == 1
     
   end
 end
