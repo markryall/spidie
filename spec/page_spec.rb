@@ -4,29 +4,42 @@ describe "page retrieve" do
   before(:each) do
     @url = stub('url')
     @links = stub('links')
-    @page = stub('page', :url => @url, :links => @links)
+    @page = OpenStruct.new(:url => @url, :links => @links)
+
     @httpclient = stub("client")
-    HTTPClient.should_receive(:new).and_return @httpclient
+    HTTPClient.stub!(:new).and_return @httpclient
+    @http_content = stub('http_content')
+    @http_header = stub('http_header')
+    @http_result = stub('http_result', :content => @http_content, :header => @http_header)
+    @httpclient.stub!(:get).with(@url).and_return @http_result
+
     @http_parser = stub('http_parser')
     HtmlParser.stub!(:new).and_return @http_parser
+    @http_parser.stub!(:extract_links).and_return []
   end
 
-  it "should retrieve a health page" do
+  it "should retrieve a hearty page" do
     links = ["http://link1", "http://link2", "http://link3"]
-    html = stub('html')
-    http_result = stub('http_result', :content => html, :status => 200)
-
-    @httpclient.should_receive(:get).with(@url).and_return http_result
-    @http_parser.should_receive(:extract_links).with(html).and_return links
-
+    @http_result.should_receive(:status).and_return 200
+    @http_parser.should_receive(:extract_links).with(@http_content).and_return links
     Page.retrieve_links_for(@page).should == links
   end
 
-  it "should retrieve a broken page" do
-    @httpclient.should_receive(:get).with(@url).and_return stub('result', :status => 404)
-    @http_parser.should_not_receive(:extract_links)
-    @page.should_receive(:broken=).with(true)
+  [401, 404, 500].each do |status|
+    it "should not retrieve links on receiving a #{status} status" do
+      @http_result.should_receive(:status).and_return status
+      @http_parser.should_not_receive(:extract_links)
+      @page.should_receive(:broken=).with(true)
+      Page.retrieve_links_for(@page).should == []
+    end
+  end
 
+  it 'should respectfully follow a 302' do
+    redirect_url = stub('redirect_url')
+    @http_result.should_receive(:status).and_return 302
+    @http_header.should_receive(:[]).with('Location').and_return [redirect_url]
+    @httpclient.should_receive(:get).with(redirect_url).and_return stub('http_redirect_response', :status => 401)
     Page.retrieve_links_for(@page).should == []
+    @page.url.should == redirect_url
   end
 end

@@ -23,10 +23,14 @@ module Spidie
       result = client.get(page.url)
       log { "Status was #{result.status}" }
       links = []
-      if result.status == 200
-        links = HtmlParser.new(page.url).extract_links(result.content)
-      else
-        page.broken = true
+      case result.status
+        when 200
+          links = HtmlParser.new(page.url).extract_links(result.content)
+        when 302
+          page.url = result.header['Location'].first
+          links = retrieve_links_for page
+        else
+          page.broken = true
       end
       links
     end
