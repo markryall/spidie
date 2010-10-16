@@ -18,13 +18,8 @@ describe "page retrieve" do
 
     @httpclient.should_receive(:get).with(@url).and_return http_result
     @http_parser.should_receive(:extract_links).with(html).and_return links
-    links.each do |link|
-      linked_page = stub(link)
-      Page.should_receive(:retrieve_or_create_page).with(link).and_return(linked_page)
-      @links.should_receive(:<<).with(linked_page)
-    end
 
-    Page.retrieve_links_for @page
+    Page.retrieve_links_for(@page).should == links
   end
 
   it "should retrieve a broken page" do
@@ -32,6 +27,6 @@ describe "page retrieve" do
     @http_parser.should_not_receive(:extract_links)
     @page.should_receive(:broken=).with(true)
 
-    Page.retrieve_links_for @page
+    Page.retrieve_links_for(@page).should == []
   end
 end

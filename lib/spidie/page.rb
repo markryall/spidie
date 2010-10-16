@@ -19,13 +19,13 @@ module Spidie
       client = HTTPClient.new
       result = client.get(page.url)
 
+      links = []
       if result.status == 200
-        HtmlParser.new(page.url).extract_links(result.content).each do |link|
-          page.links << retrieve_or_create_page(link)
-        end
+        links = HtmlParser.new(page.url).extract_links(result.content)
       else
         page.broken = true
       end
+      links
     end
   end
 end
