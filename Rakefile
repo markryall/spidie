@@ -10,7 +10,6 @@ task "resque:setup" => :environment
 
 task :environment do
   $: << File.dirname(__FILE__)+'/lib'
-  require 'spidie/devnull_job'
   require 'spidie/job'
   require 'spidie/report_job'
   require 'spidie/jobutils'
