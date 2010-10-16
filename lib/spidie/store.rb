@@ -11,7 +11,11 @@ module Spidie
     end
 
     def retrieve_page url
-      Page.find(:url => url).first || create_page(url)
+      Page.find(:url => url).first
+    end
+
+    def retrieve_or_create_page url
+      retrieve_page(url) || create_page(url)
     end
   end
 end

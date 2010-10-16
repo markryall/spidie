@@ -12,7 +12,7 @@ module Spidie
       while_shopping do
         puts "grabbing #{url}"
 
-        page = retrieve_page(url)
+        page = retrieve_or_create_page url
         Page.retrieve_links_for page
 
         page.links.each do |linked_page|
