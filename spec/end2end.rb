@@ -4,19 +4,22 @@ require 'fileutils'
 require 'json'
 
 describe 'the spider, the spider' do
+  
+  def wait_for_file file
+    10.times do
+      break if File.exists?(file)
+      sleep 1
+    end
+    raise 'timed out waiting for #{file} file' unless File.exists?(file)
+  end
+  
   def verify_url url
     success_file = 'tmp/success'
     FileUtils.rm success_file, :force => true
     Resque.enqueue Spidie::TestJob, url
-
-    10.times do
-      break if File.exists?(success_file)
-      sleep 1
-    end
-
-    raise 'timed out waiting for success' unless File.exists?(success_file)
+    wait_for_file success_file
   end
-
+  
   it 'should consume with eagerness the url for a page with no links' do
     Resque.enqueue Spidie::Job, 'http://localhost:4567/0_index.html'
     verify_url 'http://localhost:4567/0_index.html'
