@@ -14,6 +14,14 @@ task :environment do
   Pids.persist 'tmp/spidie.pid'
 end
 
+task :check do
+  redis_conf_file = "/usr/local/etc/redis.conf"
+  redis_conf = open(redis_conf_file).read
+  if redis_conf =~ /daemonize.*no/
+    puts "you are not evil enough. set daemonize to yes in #{redis_conf_file}"
+  end
+end
+
 task :default do
   sh "rake spec"
   sh "rake acceptance_tests"
@@ -41,7 +49,7 @@ task :resque_view do
 end
 
 desc 'run acceptance tests, starts up spider and fake webserver first'
-task :acceptance_tests => [:clean, :start] do
+task :acceptance_tests => [:check, :clean, :start] do
   sh "spec spec/end2end.rb"
 end
 
@@ -60,3 +68,4 @@ Pids.create_tasks :name => :test_web,
 
 Pids.create_tasks :name => :spidie,
   :command => 'QUEUE=urls rake resque:work'
+  

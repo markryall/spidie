@@ -1,6 +1,7 @@
 require 'resque'
 require 'spidie/page'
 require 'spidie/store'
+require 'fileutils'
 
 module Spidie
   module Job
@@ -33,7 +34,7 @@ module Spidie
       Neo4j::Transaction.run do
         if Page.find(:url => url).first
           puts 'found it'
-          File.open("success", "w") {|f| f.puts "something" }
+          FileUtils.touch "tmp/success"
         else
           puts 'found it - THE OPPOSITE!'
         end

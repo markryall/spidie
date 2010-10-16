@@ -5,7 +5,7 @@ module Pids
 
   def self.kill path
     system "kill #{File.read(path)}"
-    FileUtils.rm path if File.exist? path
+    FileUtils.rm path , :force => true
   end
 
   def self.create_tasks params

@@ -5,15 +5,16 @@ require 'json'
 
 describe 'the spider, the spider' do
   def verify_url url
-    FileUtils.rm 'success', :force => true
+    success_file = 'tmp/success'
+    FileUtils.rm success_file, :force => true
     Resque.enqueue Spidie::TestJob, url
 
     10.times do
-      break if File.exists?("success")
+      break if File.exists?(success_file)
       sleep 1
     end
 
-    raise 'timed out waiting for success' unless File.exists?("success")
+    raise 'timed out waiting for success' unless File.exists?(success_file)
   end
 
   it 'should consume with eagerness the url for a page with no links' do
@@ -35,16 +36,17 @@ describe 'the spider, the spider' do
   
   it 'should consume with eagerness the url for a page with no links and give a report' do
     pending
+    report_file = "tmp/report"
     Resque.enqueue Spidie::Job, 'http://localhost:4567/hi.html'
     Resque.enqueue Spidie::ReportJob
     
     10.times do
-      break if File.exists?("report")
+      break if File.exists?(report_file)
       sleep 1
     end
-    raise 'timed out waiting for report' unless File.exists?("report") 
+    raise 'timed out waiting for report' unless File.exists?(report_file) 
     
-    report = JSON.parse open("report").read
+    report = JSON.parse open(report_file).read
     report.total_pages.should == 1
     report.num_broken.should == 1
     
