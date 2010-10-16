@@ -11,7 +11,7 @@ module Pids
   def self.create_tasks params
     name = params[:name]
     command = params[:full_command]
-    command ||= "#{params[:command]} > tmp/#{name}.log 2>&1 &"
+    command ||= "LOG_PATH=tmp/#{name}.log #{params[:command]} > tmp/#{name}.out 2>&1 &"
     pid = params[:pid] || "tmp/#{name}.pid"
 
     namespace name do

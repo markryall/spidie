@@ -1,24 +1,26 @@
 require 'resque'
 require 'spidie/page'
 require 'spidie/store'
+require 'spidie/logger'
 require 'fileutils'
 
 module Spidie
   module Job
+    extend Logger
     extend Store
 
     @queue = :urls
 
     def self.perform url
-      puts "Spidie:Job.perform(#{url})"
+      log { "Spidie:Job.perform(#{url})" }
       while_shopping do
         if retrieve_page(url)
-          puts "already visited #{url}"
+          log { "  already visited #{url}" }
         else
           page = create_page url
 
           Page.retrieve_links_for(page).each do |link|
-            puts "enqueing #{link}"
+            log { "  enqueing #{link}" }
             Resque.enqueue Spidie::Job, link
           end
         end
@@ -27,6 +29,8 @@ module Spidie
   end
 
   module TestJob
+    extend Logger
+
     @queue = :urls
 
     def self.perform url
@@ -35,10 +39,10 @@ module Spidie
       node = nil
       Neo4j::Transaction.run do
         if Page.find(:url => url).first
-          puts 'found it'
+          log { '  found it' }
           FileUtils.touch "tmp/success"
         else
-          puts 'found it - THE OPPOSITE!'
+          log { '  found it - THE OPPOSITE!' }
         end
       end
     end
