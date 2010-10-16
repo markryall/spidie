@@ -9,4 +9,4 @@ IDEAS
 
 CURRENT
 
-- create a ReportJob which outputs a report as json
+- fix other end2end tests to use report, not TestJob
