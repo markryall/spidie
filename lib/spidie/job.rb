@@ -10,15 +10,17 @@ module Spidie
     @queue = :urls
 
     def self.perform url
+      puts "Spidie:Job.perform(#{url})"
       while_shopping do
-        puts "grabbing #{url}"
+        if retrieve_page(url)
+          puts "already visited #{url}"
+        else
+          page = create_page url
 
-        page = retrieve_or_create_page url
-        Page.retrieve_links_for page
-
-        page.links.each do |linked_page|
-          puts "enqueing #{linked_page.url}"
-          Resque.enqueue Spidie::Job, linked_page.url
+          Page.retrieve_links_for(page).each do |link|
+            puts "enqueing #{link}"
+            Resque.enqueue Spidie::Job, link
+          end
         end
       end
     end
@@ -28,7 +30,7 @@ module Spidie
     @queue = :urls
 
     def self.perform url
-      puts "asked to verify existance of #{url}"
+      puts "Spidie:TestJob.perform(#{url})"
 
       node = nil
       Neo4j::Transaction.run do

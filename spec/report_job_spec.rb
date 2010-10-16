@@ -20,8 +20,8 @@ describe "report job" do
 
     while_shopping do
       report = Report.new
-      report.total_pages = Neo4j.number_of_nodes_in_use  
-      report.num_broken = Page.find('broken: true').size
+      report.total_pages = pages.count
+      report.num_broken = broken_pages.count
       
       open(report_file, 'w') {|f| f.puts report.to_json }
     end

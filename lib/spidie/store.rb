@@ -17,5 +17,17 @@ module Spidie
     def retrieve_or_create_page url
       retrieve_page(url) || create_page(url)
     end
+
+    def pages
+      pages = []
+      Neo4j.all_nodes do |node|
+        pages << node if node.instance_of?(Spidie::Page)
+      end
+      pages
+    end
+
+    def broken_pages
+      Page.find('broken: true')
+    end
   end
 end
