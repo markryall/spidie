@@ -1,7 +1,11 @@
 IDEAS
 
 - make end2end test use this ReportJob and make assertions about it
-- give the report job  a high priority
+- some way to stop ensure the report job doesnt get stuck between 1000 url jobs
+- create a relationship redirects_to for 302s and enqueue the redirect url
+- change log {"msg"} to log "msg"
+- can we change Page.retrieve_links_for(page) to be page.retrieve_links ?
+- is there a better way to count all pages rather than iterating through all nodes?
 
 CURRENT
 
