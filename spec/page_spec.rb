@@ -3,7 +3,8 @@ require File.dirname(__FILE__)+'/spec_helper'
 describe "page retrieve" do
   before(:each) do
     @url = stub('url')
-    @page = stub('page', :url => @url)
+    @links = stub('links')
+    @page = stub('page', :url => @url, :links => @links)
     @httpclient = stub("client")
     HTTPClient.should_receive(:new).and_return @httpclient
     @http_parser = stub('http_parser')
@@ -17,8 +18,11 @@ describe "page retrieve" do
 
     @httpclient.should_receive(:get).with(@url).and_return http_result
     @http_parser.should_receive(:extract_links).with(html).and_return links
-    @page.should_receive(:broken).and_return(false)
-    links.each {|link| Page.should_receive(:new).with(:url => link, :broken => false)}
+    links.each do |link|
+      linked_page = stub(link)
+      Page.should_receive(:retrieve_or_create_page).with(link).and_return(linked_page)
+      @links.should_receive(:<<).with(linked_page)
+    end
 
     Page.retrieve_links_for @page
   end
@@ -27,7 +31,6 @@ describe "page retrieve" do
     @httpclient.should_receive(:get).with(@url).and_return stub('result', :status => 404)
     @http_parser.should_not_receive(:extract_links)
     @page.should_receive(:broken=).with(true)
-    @page.should_receive(:broken).and_return(true)
 
     Page.retrieve_links_for @page
   end
