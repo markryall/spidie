@@ -10,7 +10,7 @@ task "resque:setup" => :environment
 
 task :environment do
   $: << File.dirname(__FILE__)+'/lib'
-  require 'spidie/job'
+  require ENV['ROGUE_SPIDER'] ? 'spidie/devnull_job' : 'spidie/job'
   Pids.persist 'tmp/spidie.pid'
 end
 
