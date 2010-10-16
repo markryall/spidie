@@ -8,5 +8,9 @@ require 'neo4j'
 include Spidie
 
 def clean_db
-  Neo4j::Transaction.run { Neo4j.all_nodes {|node| node.del }}
+  Neo4j::Transaction.run do
+    Neo4j.all_nodes do |node|
+      node.del unless node.neo_id == 0
+    end
+  end
 end

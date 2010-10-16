@@ -1,17 +1,21 @@
 require File.dirname(__FILE__)+'/spec_helper'
 
 describe "report job" do
-  before(:each) do
+  include Store
+
+  before do
     clean_db
   end
-  
+
   it "should report stuff" do
-    Store.put Page.new("good_page", false)
-    Store.put Page.new("broken_page", true)
+    while_shopping do
+      Page.new :url => "good_page", :broken => false
+      Page.new :url => "broken_page", :broken => true
+    end
 
     Neo4j::Transaction.run do
-      Neo4j.number_of_nodes_in_use.should == 2
-      PageNode.find('broken: true').size.should ==1
+      Neo4j.number_of_nodes_in_use.should == 3
+      Page.find('broken: true').size.should ==1
     end
   end
 end
