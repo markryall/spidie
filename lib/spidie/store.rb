@@ -11,7 +11,7 @@ module Spidie
     end
 
     def retrieve_page url
-      Page.find(:url => url).first
+      Page.find(:url => url).first || create_page(url)
     end
   end
 end
