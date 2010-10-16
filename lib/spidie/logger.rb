@@ -3,7 +3,7 @@ module Spidie
     def log
       if ENV['LOG_PATH']
         File.open(ENV['LOG_PATH'], 'a') do |file|
-          file.puts yield
+          file.puts "#{Time.now}: #{yield}"
         end
       end
     end

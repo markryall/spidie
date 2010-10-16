@@ -1,4 +1,5 @@
 require 'neo4j'
+require 'spidie/page'
 require 'spidie/store'
 
 module Spidie
