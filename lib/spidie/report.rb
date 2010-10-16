@@ -14,10 +14,9 @@ module AutoJ
 end
 
 module Spidie
-class Report
-  include AutoJ
-  attr_accessor :total_pages, :num_broken
-
-end
+  class Report
+    include AutoJ
+    attr_accessor :total_pages, :num_broken
+  end
 end
 
