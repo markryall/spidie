@@ -13,9 +13,9 @@ describe "report job" do
       Page.new :url => "broken_page", :broken => true
     end
 
-    Neo4j::Transaction.run do
-      Neo4j.number_of_nodes_in_use.should == 3
-      Page.find('broken: true').size.should ==1
+    while_shopping do
+      pages.count.should == 2
+      broken_pages.count.should ==1
     end
   end
 end
