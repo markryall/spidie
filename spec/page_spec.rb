@@ -3,8 +3,8 @@ require File.dirname(__FILE__)+'/spec_helper'
 describe "page retrieve" do
   before(:each) do
     @url = stub('url')
-    @links = stub('links')
-    @page = OpenStruct.new(:url => @url, :links => @links)
+    @page_links = stub('links')
+    @page = OpenStruct.new(:url => @url, :links => @page_links)
 
     @httpclient = stub("client")
     HTTPClient.stub!(:new).and_return @httpclient
@@ -22,7 +22,12 @@ describe "page retrieve" do
     links = ["http://link1", "http://link2", "http://link3"]
     @http_result.should_receive(:status).and_return 200
     @http_parser.should_receive(:extract_links).with(@http_content).and_return links
-    Page.retrieve_links_for(@page).should == links
+    links.each do |link|
+      linked_page = stub("linked page #{link}")
+      Page.should_receive(:retrieve_or_create_page).with(link).and_return(linked_page)
+      @page_links.should_receive(:<<).with(linked_page)
+    end
+    Page.retrieve_links_for(@page)
   end
 
   [401, 404, 500].each do |status|
@@ -30,7 +35,7 @@ describe "page retrieve" do
       @http_result.should_receive(:status).and_return status
       @http_parser.should_not_receive(:extract_links)
       @page.should_receive(:broken=).with(true)
-      Page.retrieve_links_for(@page).should == []
+      Page.retrieve_links_for(@page)
     end
   end
 
@@ -39,7 +44,7 @@ describe "page retrieve" do
     @http_result.should_receive(:status).and_return 302
     @http_header.should_receive(:[]).with('Location').and_return [redirect_url]
     @httpclient.should_receive(:get).with(redirect_url).and_return stub('http_redirect_response', :status => 401)
-    Page.retrieve_links_for(@page).should == []
+    Page.retrieve_links_for(@page)
     @page.url.should == redirect_url
   end
 end

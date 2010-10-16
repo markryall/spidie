@@ -14,15 +14,14 @@ module Spidie
     def self.perform url
       log { "Spidie:Job.perform(#{url})" }
       while_shopping do
-        if retrieve_page(url)
+        page = retrieve_or_create_page url
+        if page.visited
           log { "skipping already visited page" }
         else
-          log { "creating new page" }
-          page = create_page url
-
-          Page.retrieve_links_for(page).each do |link|
-            log { "  enqueing #{link}" }
-            Resque.enqueue Spidie::Job, link
+          Page.retrieve_links_for(page)
+          page.links.each do |linked_page|
+            log { "enqueing #{linked_page.url}" }
+            Resque.enqueue Spidie::Job, linked_page.url
           end
         end
       end

@@ -1,13 +1,17 @@
 require 'neo4j'
+require 'spidie/logger'
 
 module Spidie
   module Store
+    include Logger
+
     def while_shopping
       Neo4j::Transaction.run { yield }
     end
 
-    def create_page url, broken=false
-      Page.new :url => url, :broken => broken
+    def create_page url
+      log { "creating new page with url #{url}" }
+      Page.new :url => url, :broken => false, :visited => false
     end
 
     def retrieve_page url
@@ -27,7 +31,7 @@ module Spidie
     end
 
     def broken_pages
-      Page.find('broken: true')
+      Page.find(:broken => true)
     end
   end
 end
