@@ -33,5 +33,10 @@ module Spidie
     def broken_pages
       Page.find(:broken => true)
     end
+    
+    def good_pages
+      Page.find(:broken => false)
+    end
+    
   end
 end

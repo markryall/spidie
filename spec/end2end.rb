@@ -44,7 +44,9 @@ describe 'the spider, the spider' do
   end
   
   it 'should consume with eagerness the url for a page with no links and give a report' do
-    Resque.enqueue Spidie::Job, 'http://localhost:4567/hi.html'
+    pending
+    url = 'http://localhost:4567/hi.html'
+    Resque.enqueue Spidie::Job, url
 
     Resque.enqueue Spidie::ReportJob
     wait_for_file REPORT_FILE
@@ -52,6 +54,7 @@ describe 'the spider, the spider' do
     report = JSON.parse open(REPORT_FILE).read
     report["total_pages"].should == 1
     report["num_broken"].should == 1
+    report["broken_pages"].should include url
     
   end
 end

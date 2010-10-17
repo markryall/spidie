@@ -15,8 +15,10 @@ module Spidie
       report = Report.new
       
       while_shopping do  
-        report.total_pages = pages.count
-        report.num_broken = broken_pages.count
+        report.good_pages = good_pages.map {|page| page.url}
+        report.broken_pages = broken_pages.map {|page| page.url}
+        report.total_pages = report.good_pages.count + report.broken_pages.count
+        report.num_broken = report.broken_pages.count
       end
       
       open("report", 'w') {|f| f.puts report.to_json }
