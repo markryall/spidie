@@ -11,10 +11,9 @@ describe "report job" do
     FileUtils.rm "report", :force => true
   end
 
-  it "should report stuff" do
-    Page = Struct.new(:url, :broken)
-    ReportJob.should_receive(:good_pages).and_return [Page.new("good_page",false)]
-    ReportJob.should_receive(:broken_pages).and_return [Page.new("broken_page1",true), Page.new("broken_page2", true)]
+  it "should report stuff" do    
+    ReportJob.should_receive(:good_pages).and_return [double('page', :url => 'good_page', :broken => false)]
+    ReportJob.should_receive(:broken_pages).and_return [double('page', :url => 'broken_page1', :broken => true), double('page', :url => 'broken_page2', :broken => true)]
      
     ReportJob.perform
       
@@ -23,6 +22,5 @@ describe "report job" do
     report_json["num_broken"].should == 2
     report_json["broken_pages"].should == ["broken_page1", "broken_page2"]
     report_json["good_pages"].should == ["good_page"]
-  
   end
 end
