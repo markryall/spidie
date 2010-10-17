@@ -6,6 +6,8 @@ IDEAS
 - change log {"msg"} to log "msg"
 - can we change Page.retrieve_links_for(page) to be page.retrieve_links ?
 - is there a better way to count all pages rather than iterating through all nodes?
+- store whether link is relative
+- add end2end test that handles cycles
 
 CURRENT
 
