@@ -44,7 +44,6 @@ describe 'the spider, the spider' do
   end
   
   it 'should consume with eagerness the url for a page with no links and give a report' do
-    pending
     url = 'http://localhost:4567/hi.html'
     Resque.enqueue Spidie::Job, url
 
@@ -55,6 +54,5 @@ describe 'the spider, the spider' do
     report["total_pages"].should == 1
     report["num_broken"].should == 1
     report["broken_pages"].should include url
-    
   end
 end
