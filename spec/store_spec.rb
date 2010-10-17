@@ -32,4 +32,43 @@ describe "spider database" do
       found_page.links.map{|page| page.url}.should == [@linked_url]
     end
   end
+  
+  it 'should list good_pages' do
+    while_shopping do
+      Page.new :url => "good_page1", :broken => false
+      Page.new :url => "good_page2", :broken => false
+      Page.new :url => "broken_page", :broken => true
+    end
+    result = good_pages
+    result.count.should == 2
+    urls = result.map {|page| page.url}
+    urls.should include "good_page1"
+    urls.should include "good_page2"
+  end
+  
+  it 'should list broken_pages' do
+    while_shopping do
+      Page.new :url => "broken_page1", :broken => true
+      Page.new :url => "broken_page2", :broken => true
+      Page.new :url => "good_page", :broken => false
+    end
+    result = broken_pages
+    result.count.should == 2
+    urls = result.map {|page| page.url}
+    urls.should include "broken_page1"
+    urls.should include "broken_page2"
+  end
+  
+  it 'should return sensible stuff when no pages' do
+    broken_pages.count.should == 0
+    good_pages.count.should == 0
+    
+    broken_pages.map{|page| page.url}.should == []
+    good_pages.map{|page| page.url}.should == []
+  end
 end
+
+
+
+
+
