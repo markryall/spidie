@@ -10,17 +10,20 @@ module Spidie
     @queue = :urls
 
     def self.perform
-      log { "Spidie:ReportJob.perform (creating report)" }
-      
+      log "Spidie:ReportJob.perform (creating report)"
+
       report = Report.new
-      
-      while_shopping do  
+
+      while_shopping do
         report.good_pages = good_pages.map {|page| page.url}
         report.broken_pages = broken_pages.map {|page| page.url}
         report.total_pages = report.good_pages.count + report.broken_pages.count
         report.num_broken = report.broken_pages.count
       end
-      
+
+      report_json = report.to_json
+
+      log report_json
       open("report", 'w') {|f| f.puts report.to_json }
     end
   end
