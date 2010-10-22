@@ -8,7 +8,7 @@ describe "report job" do
   include Store
 
   before do
-    FileUtils.rm "report", :force => true
+    FileUtils.rm REPORT_FILE if File.exists? REPORT_FILE
   end
 
   it "should report stuff" do    
@@ -17,7 +17,7 @@ describe "report job" do
      
     ReportJob.perform
       
-    report_json = JSON.parse open("report").read
+    report_json = JSON.parse open(REPORT_FILE).read
     report_json["total_pages"].should == 3
     report_json["num_broken"].should == 2
     report_json["broken_pages"].should == ["broken_page1", "broken_page2"]

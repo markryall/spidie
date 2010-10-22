@@ -24,7 +24,7 @@ module Spidie
       report_json = report.to_json
 
       log report_json
-      open("report", 'w') {|f| f.puts report.to_json }
+      open('tmp/report.json', 'w') {|f| f.puts report.to_json }
     end
   end
 end
