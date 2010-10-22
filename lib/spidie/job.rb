@@ -31,24 +31,4 @@ module Spidie
       end
     end
   end
-
-  module TestJob
-    extend Logger
-
-    @queue = :urls
-
-    def self.perform url
-      log "Spidie:TestJob.perform(#{url})"
-
-      node = nil
-      Neo4j::Transaction.run do
-        if Page.find(:url => url).first
-          log '  found it'
-          FileUtils.touch "tmp/success"
-        else
-          log '  found it - THE OPPOSITE!'
-        end
-      end
-    end
-  end
 end
