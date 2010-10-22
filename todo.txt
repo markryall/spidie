@@ -4,6 +4,11 @@ IDEAS
 - create a relationship redirects_to for 302s and enqueue the redirect url
 - can we change Page.retrieve_links_for(page) to be page.retrieve_links ?
 - is there a better way to count all pages rather than iterating through all nodes?
+- named params would be nice. eg HttpResponse.new(:status => 200, :content => html) instead of HttpResponse.new(200, html)
+
+sc:
+
+sp:
+
 - store whether link is relative
 - add end2end test that handles cycles
-- named params would be nice. eg HttpResponse.new(:status => 200, :content => html) instead of HttpResponse.new(200, html)
