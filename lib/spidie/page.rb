@@ -25,6 +25,7 @@ module Spidie
         result = client.get(page.url)
         log "Status was #{result.status}"
       rescue Errno::ECONNREFUSED => e
+        client.head("http://www.google.com")
         log e.message
         page.broken = true
       end

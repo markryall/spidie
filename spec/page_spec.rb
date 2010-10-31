@@ -12,6 +12,8 @@ describe "page retrieve" do
     @http_header = stub('http_header')
     @http_result = stub('http_result', :content => @http_content, :header => @http_header)
     @httpclient.stub!(:get).with(@url).and_return @http_result
+    
+    @httpclient.stub(:head).with("http://www.google.com").and_return stub('http_result', :status =>200)
 
     @http_parser = stub('http_parser')
     HtmlParser.stub!(:new).and_return @http_parser
@@ -53,6 +55,14 @@ describe "page retrieve" do
      @page.should_receive(:broken=).with(true)
      
      Page.retrieve_links_for(@page)
+  end
+  
+  it 'should not mark page as broken and raise exception if connection is refused due to general network problems' do
+    @httpclient.should_receive(:get).with(@url).and_raise Errno::ECONNREFUSED.new
+    @httpclient.should_receive(:head).with("http://www.google.com").and_raise Errno::ECONNREFUSED.new
+    
+    @page.should_not_receive(:broken=).with(true)
+    expect{ Page.retrieve_links_for(@page)}.to raise_error(Errno::ECONNREFUSED)
   end
 
 end
