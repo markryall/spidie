@@ -39,4 +39,16 @@ module Pids
     task :stop => ["#{name}:stop"]
     task :start => ["#{name}:start"]
   end
+  
+  def self.check_started app_name, check_function
+    30.times do |i|
+      raise "#{app_name} not started " if i == 30
+      begin
+        break if check_function.call()
+      rescue
+
+      end
+      sleep 1
+    end
+  end
 end
