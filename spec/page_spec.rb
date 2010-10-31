@@ -20,7 +20,7 @@ describe "page retrieve" do
 
   it "should retrieve a hearty page" do
     links = ["http://link1", "http://link2", "http://link3"]
-    @http_result.should_receive(:status).and_return 200
+    @http_result.stub(:status).and_return 200
     @http_parser.should_receive(:extract_links).with(@http_content).and_return links
     links.each do |link|
       linked_page = stub("linked page #{link}")
@@ -31,8 +31,8 @@ describe "page retrieve" do
   end
 
   [401, 404, 500].each do |status|
-    it "should not retrieve links on receiving a #{status} status" do
-      @http_result.should_receive(:status).and_return status
+    it "should mark page as broken if status is #{status}" do
+      @http_result.stub(:status).and_return status
       @http_parser.should_not_receive(:extract_links)
       @page.should_receive(:broken=).with(true)
       Page.retrieve_links_for(@page)
@@ -41,10 +41,12 @@ describe "page retrieve" do
 
   it 'should respectfully follow a 302' do
     redirect_url = stub('redirect_url')
-    @http_result.should_receive(:status).and_return 302
+    @http_result.stub(:status).and_return 302
     @http_header.should_receive(:[]).with('Location').and_return [redirect_url]
     @httpclient.should_receive(:get).with(redirect_url).and_return stub('http_redirect_response', :status => 401)
     Page.retrieve_links_for(@page)
     @page.url.should == redirect_url
   end
+  
+
 end

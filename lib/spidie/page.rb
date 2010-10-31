@@ -18,9 +18,9 @@ module Spidie
 
     def self.retrieve_links_for page
       client = HTTPClient.new
-      log { "GET request for #{page.url}" }
+      log "GET request for #{page.url}" 
       result = client.get(page.url)
-      log { "Status was #{result.status}" }
+      log "Status was #{result.status}"
       case result.status
         when 200
           HtmlParser.new(page.url).extract_links(result.content).each do |link_url|
@@ -28,7 +28,7 @@ module Spidie
           end
         when 302
           page.url = result.header['Location'].first
-          log { "Changed url to #{page.url}" }
+          log "Changed url to #{page.url}"
           links = retrieve_links_for page
         else
           page.broken = true
