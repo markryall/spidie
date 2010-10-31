@@ -53,7 +53,7 @@ end
 
 desc 'run acceptance tests, starts up spider and fake webserver first'
 task :acceptance_tests => [:check, :clean, :start] do
-  Pids.check_started "test_application.rb", lambda { HTTPClient.new.head("http://localhost:4567/page_with_two_working_links_and_one_broken.html").status == 200 }
+  Pids.check_started "test_application.rb", lambda { HTTPClient.new.head("http://localhost:4567/page_with_two_working_links_and_two_broken.html").status == 200 }
  
   sh "spec spec/end2end.rb"
 end

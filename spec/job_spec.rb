@@ -9,7 +9,7 @@ describe Spidie::Job do
 
   it 'should only continue when the page does not already exist' do
     @page.should_receive(:visited).and_return true
-    Page.should_not_receive :retrieve_links_for
+    @page.should_not_receive :get_content_and_populate_links
     Job.perform @url
   end
 
@@ -17,7 +17,7 @@ describe Spidie::Job do
     url1, url2 = stub('url1'), stub('url2')
     page1, page2 = stub('page1', :url => url1), stub('page2', :url => url2)
     @page.should_receive(:visited).and_return false
-    Page.should_receive(:retrieve_links_for).with(@page)
+    @page.should_receive(:get_content_and_populate_links)
     @page.should_receive(:links).and_return [page1, page2]
 
     Resque.should_receive(:enqueue).with(Job, url1)

@@ -19,7 +19,7 @@ module Spidie
           if page.visited
             log "skipping already visited page"
           else
-            Page.retrieve_links_for(page)
+            page.get_content_and_populate_links
             page.links.each do |linked_page|
               log "enqueing #{linked_page.url}"
               Resque.enqueue Spidie::Job, linked_page.url

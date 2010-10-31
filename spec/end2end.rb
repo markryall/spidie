@@ -7,7 +7,7 @@ require 'json'
 describe 'the spider, the spider' do
   before(:each) do
     Resque.enqueue Spidie::JobUtils::CleanDBJob
-    [LOG_FILE, REPORT_FILE].each {|f| FileUtils.rm f if File.exist? f }
+    [REPORT_FILE].each {|f| FileUtils.rm f if File.exist? f }
   end
 
   def wait_for_report

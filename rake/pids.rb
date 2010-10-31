@@ -41,14 +41,14 @@ module Pids
   end
   
   def self.check_started app_name, check_function
-    30.times do |i|
-      raise "#{app_name} not started " if i == 30
+    50.times do |i|
+      raise "#{app_name} not started " if i == 29
       begin
         break if check_function.call()
-      rescue
-
+      rescue 
       end
-      sleep 1
+      puts "waiting #{i}"
+      sleep 2
     end
   end
 end
