@@ -48,5 +48,11 @@ describe "page retrieve" do
     @page.url.should == redirect_url
   end
   
+  it 'should mark page as broken if connection is refused' do
+     @httpclient.should_receive(:get).with(@url).and_raise Errno::ECONNREFUSED.new
+     @page.should_receive(:broken=).with(true)
+     
+     Page.retrieve_links_for(@page)
+  end
 
 end
