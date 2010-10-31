@@ -54,7 +54,7 @@ describe 'the spider, the spider' do
     working_urls = ["http://localhost:4567/page_with_two_working_links_and_two_broken.html",
      "http://localhost:4567/page_with_no_links.html",
      "http://localhost:4567/page_with_relative_links_one_fine_one_broken.html",
-     "http://localhost:4567/working_relative_link.html"]
+     "http://localhost:4567/working_relative_link_with_cyle.html"]
     broken_urls = ["http://localhost:4567/broken_link.html",
       "http://localhost:11111/bad_hostname.html",
       "http://localhost:4567/broken_relative_link.html"]

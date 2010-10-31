@@ -29,6 +29,7 @@ describe "page retrieve" do
       Page.should_receive(:retrieve_or_create_page).with(link).and_return(linked_page)
       @page_links.should_receive(:<<).with(linked_page)
     end
+    @page.should_receive(:visited=).with(true)
     Page.retrieve_links_for(@page)
   end
 
@@ -37,6 +38,7 @@ describe "page retrieve" do
       @http_result.stub(:status).and_return status
       @http_parser.should_not_receive(:extract_links)
       @page.should_receive(:broken=).with(true)
+      @page.should_receive(:visited=).with(true)
       Page.retrieve_links_for(@page)
     end
   end
@@ -46,6 +48,7 @@ describe "page retrieve" do
     @http_result.stub(:status).and_return 302
     @http_header.should_receive(:[]).with('Location').and_return [redirect_url]
     @httpclient.should_receive(:get).with(redirect_url).and_return stub('http_redirect_response', :status => 401)
+    @page.should_receive(:visited=).with(true).twice
     Page.retrieve_links_for(@page)
     @page.url.should == redirect_url
   end
@@ -53,6 +56,7 @@ describe "page retrieve" do
   it 'should mark page as broken if connection is refused' do
      @httpclient.should_receive(:get).with(@url).and_raise Errno::ECONNREFUSED.new
      @page.should_receive(:broken=).with(true)
+     @page.should_receive(:visited=).with(true)
      
      Page.retrieve_links_for(@page)
   end
@@ -62,6 +66,7 @@ describe "page retrieve" do
     @httpclient.should_receive(:head).with("http://www.google.com").and_raise Errno::ECONNREFUSED.new
     
     @page.should_not_receive(:broken=).with(true)
+    @page.should_not_receive(:visited=).with(true)
     expect{ Page.retrieve_links_for(@page)}.to raise_error(Errno::ECONNREFUSED)
   end
 

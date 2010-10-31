@@ -27,14 +27,21 @@ get '/page_with_relative_links_one_fine_one_broken.html' do
     head { title 'index.html' }
     body do
       ul {
-        li { a 'a link', :href => '/working_relative_link.html' }
+        li { a 'a link', :href => '/working_relative_link_with_cyle.html' }
         li { a 'a link', :href => '/broken_relative_link.html' }
       }
     end
   end
 end
 
-get '/working_relative_link.html' do
-  ''
+get '/working_relative_link_with_cyle.html' do
+  Markaby::Builder.new.html do
+    head { title 'index.html' }
+    body do
+      ul {
+        li { a 'a link', :href => '/page_with_two_working_links_and_two_broken.html' }
+      }
+    end
+  end
 end
 

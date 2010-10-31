@@ -44,6 +44,7 @@ module Spidie
             page.broken = true
         end
       end
+      page.visited = true
     end
   end
 end
