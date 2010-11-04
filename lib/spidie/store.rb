@@ -1,6 +1,9 @@
 require 'neo4j'
 require 'spidie/logger'
 
+Lucene::Config[:store_on_file] = true
+Lucene::Config[:storage_path] = "tmp/lucene"
+
 module Spidie
   module Store
     include Logger
