@@ -13,16 +13,17 @@ describe Spidie::Job do
     Job.perform @url
   end
 
-  it 'should fetch a page, store it and enqueue the links' do
+  it 'should fetch a page and enqueue the links which we have not yet visited' do
     url1, url2 = stub('url1'), stub('url2')
-    page1, page2 = stub('page1', :url => url1), stub('page2', :url => url2)
+    page1, page2 = stub('page1', :url => url1, :visited => true), stub('page2', :url => url2, :visited => false)
     @page.should_receive(:visited).and_return false
     @page.should_receive(:get_content_and_populate_links)
     @page.should_receive(:links).and_return [page1, page2]
 
-    Resque.should_receive(:enqueue).with(Job, url1)
+    Resque.should_not_receive(:enqueue).with(Job, url1)
     Resque.should_receive(:enqueue).with(Job, url2)
 
     Job.perform @url
   end
+
 end
