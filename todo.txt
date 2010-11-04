@@ -9,7 +9,7 @@ IDEAS
 
 
 sc:
-
+- don't follow links that are not qld gov 
 
 sp:
 
