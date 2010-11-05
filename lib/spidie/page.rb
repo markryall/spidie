@@ -32,9 +32,9 @@ module Spidie
         log "GET request for #{self.url}" 
         result = client.get(self.url)
         log "Status was #{result.status}"
-      rescue Errno::ECONNREFUSED => e
+      rescue Exception => e
         client.head("http://www.google.com")
-        log e.message
+        log "error during GET: " + e.message
         self.broken = true
       end
       

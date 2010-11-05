@@ -1,16 +1,22 @@
 IDEAS
 
-- some way to stop ensure the report job doesnt get stuck between 1000 url jobs
+- some way to stop ensure the report job doesnt get stuck between 1000 url jobs (put reports in a different higher priority queue!)
 - create a relationship redirects_to for 302s and enqueue the redirect url
 - is there a better way to count all pages rather than iterating through all nodes?
 - store status
 - store whether link is relative
 - store.good_pages includes pages we have not yet visited
-
+- backup my dotfiles on github
+- throttle queue - install https://github.com/flyerhzm/resque-restriction 
+- make sure we can run the report after stopping spidie
 
 sc:
 - don't follow links that are not qld gov 
+  - test dont run report til queue is empty
 
 sp:
+
+
+
 
 

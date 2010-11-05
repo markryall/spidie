@@ -77,8 +77,8 @@ describe "page retrieve" do
     @page.visited.should == true
   end
   
-  it 'should mark page as broken if connection is refused' do
-     @httpclient.should_receive(:get).with(@url).and_raise Errno::ECONNREFUSED.new
+  it 'should mark page as broken if there is a connection exception' do
+     @httpclient.should_receive(:get).with(@url).and_raise Exception.new
      
      @page.get_content_and_populate_links
      
@@ -87,10 +87,10 @@ describe "page retrieve" do
   end
   
   it 'should not mark page as broken and raise exception if connection is refused due to general network problems' do
-    @httpclient.should_receive(:get).with(@url).and_raise Errno::ECONNREFUSED.new
-    @httpclient.should_receive(:head).with("http://www.google.com").and_raise Errno::ECONNREFUSED.new
+    @httpclient.should_receive(:get).with(@url).and_raise Exception.new
+    @httpclient.should_receive(:head).with("http://www.google.com").and_raise Exception.new
 
-    expect{ @page.get_content_and_populate_links}.to raise_error(Errno::ECONNREFUSED)
+    expect{ @page.get_content_and_populate_links}.to raise_error(Exception)
     
     @page.broken.should == false
     @page.visited.should == false

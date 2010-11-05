@@ -12,7 +12,9 @@ get '/page_with_two_working_links_and_two_broken.html' do
         li { a 'a link', :href => 'http://localhost:4567/page_with_relative_links_one_fine_one_broken.html' }
         li { a 'a link', :href => 'http://localhost:4567/page_with_no_links.html' }
         li { a 'a broken link', :href => 'http://localhost:4567/broken_link.html' }
-        li { a 'a bad hostname link', :href => 'http://localhost:11111/bad_hostname.html' }
+        li { a 'a bad port link', :href => 'http://localhost:11111/bad_port.html' }
+        li { a 'a bad hostname link', :href => 'http://foo.localhost:4567/bad_port.html' }
+        #li { a 'an external domain link', :href => 'http://external.domain/wrong_hostname.html' }
       }
     end
   end

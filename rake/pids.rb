@@ -47,7 +47,7 @@ module Pids
         break if check_function.call()
       rescue 
       end
-      puts "waiting #{i}"
+      puts "waiting #{i} for #{app_name}"
       sleep 2
     end
   end

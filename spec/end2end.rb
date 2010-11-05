@@ -56,11 +56,12 @@ describe 'the spider, the spider' do
      "http://localhost:4567/page_with_relative_links_one_fine_one_broken.html",
      "http://localhost:4567/working_relative_link_with_cyle.html"]
     broken_urls = ["http://localhost:4567/broken_link.html",
-      "http://localhost:11111/bad_hostname.html",
+      "http://localhost:11111/bad_port.html",
+      "http://foo.localhost:4567/bad_port.html",
       "http://localhost:4567/broken_relative_link.html"]
 
-    report["total_pages"].should == 7
-    report["num_broken"].should == 3
+    report["total_pages"].should == 8
+    report["num_broken"].should == 4
     working_urls.each {|url| report["good_pages"].should include url}
     broken_urls.each {|url| report["broken_pages"].should include url}
   end
