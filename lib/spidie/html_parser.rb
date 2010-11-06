@@ -9,13 +9,30 @@ module Spidie
 
     def extract_links html
       links = Nokogiri::HTML(html).css('a').map{|link| link['href']}.select{|url| url != nil}
-      links.map {|link| convert link}
+      links.map do |link|
+        link = link.strip
+        if is_link_valid? link
+          convert link
+        else
+          link
+        end
+      end
     end
+    
+    def is_link_valid? link
+      begin
+        URI(link)
+        true
+      rescue URI::InvalidURIError => e
+        false
+      end      
+    end
+    
   private
     def convert link
-      uri = URI(link)
-      uri = @base_uri+uri if uri.relative?
-      uri.to_s
+        uri = URI(link)
+        uri = @base_uri+uri if uri.relative?
+        uri.to_s
     end
   end
 end
