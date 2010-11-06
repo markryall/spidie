@@ -7,6 +7,10 @@ require 'resque/tasks'
 require 'pids'
 require 'httpclient'
 
+# some aliases
+task "a" => :acceptance_tests
+task "c" => :clean
+
 task "resque:setup" => :environment
 
 task :environment do

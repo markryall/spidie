@@ -6,50 +6,37 @@ require 'json'
 
 describe 'the spider, the spider' do
   before(:each) do
+    Resque.redis.flushall 
     Resque.enqueue Spidie::JobUtils::CleanDBJob
-    [REPORT_FILE].each {|f| FileUtils.rm f if File.exist? f }
+    wait_for_jobs 1
+    [REPORT_FILE].each {|f| FileUtils.rm f if File.exist? f }    
   end
 
-  def wait_for_report
-    10.times do
-      break if File.exists? REPORT_FILE 
-      sleep 1
-    end
-    raise "timed out waiting for report file" unless File.exists? REPORT_FILE
-  end
-
-  def log_line_exists? string
-    exists = false
-    if File.exists? LOG_FILE
-      File.open(LOG_FILE) do |file|
-        file.each do |line|
-          return true if line.include? string
-        end
+  def wait_for_jobs num
+    num_p = -1
+    60.times do
+      num_p = Resque.info[:processed]
+      #puts "num processed is #{num_p}"
+      if num_p == num
+        Resque.redis.flushall
+        break
       end
+      sleep 2
     end
-    exists
+    raise "timed out waiting for jobs to finish" unless num_p == num
   end
 
-  def wait_for_url url
-    30.times do
-      break if log_line_exists? "Spidie:Job.perform(#{url}) completed"
-      sleep 1
-    end
-    raise "timed out waiting for #{url} to be processed" unless log_line_exists? "Spidie:Job.perform(#{url}) completed"
-  end
-
-  def retrieve_report
+  def retrieve_report_after_jobs num_jobs
+    wait_for_jobs num_jobs
     Resque.enqueue Spidie::ReportJob
-    wait_for_report
+    wait_for_jobs 1
     JSON.parse open(REPORT_FILE).read
   end
 
   it 'should embark on a tasty mission with all sorts of links' do
     Resque.enqueue Spidie::Job, 'http://localhost:4567/page_with_two_working_links_and_two_broken.html'
 
-    wait_for_url 'http://localhost:4567/broken_relative_link.html'
-
-    report = retrieve_report
+    report = retrieve_report_after_jobs 8
 
     working_urls = ["http://localhost:4567/page_with_two_working_links_and_two_broken.html",
      "http://localhost:4567/page_with_no_links.html",
@@ -70,9 +57,7 @@ describe 'the spider, the spider' do
     url = 'http://localhost:4567/doesnt_exist.html'
     Resque.enqueue Spidie::Job, url
 
-    wait_for_url url
-
-    report = retrieve_report
+    report = retrieve_report_after_jobs 1
     
     report["total_pages"].should == 1
     report["num_broken"].should == 1
