@@ -4,6 +4,7 @@ require 'nokogiri'
 require 'httpclient'
 require 'spidie/html_parser'
 require 'neo4j'
+require 'spidie/config'
 
 module Spidie
   class Page
@@ -55,8 +56,12 @@ module Spidie
     
     def populate_links html_content
       HtmlParser.new(self.url).extract_links(html_content).each do |link_url|
-        self.links << retrieve_or_create_page(link_url) unless link_url == self.url
+        self.links << retrieve_or_create_page(link_url) unless we_are_not_interested_in link_url
       end
+    end
+    
+    def we_are_not_interested_in link_url
+      link_url == self.url or not link_url.include? Config[:search_domain]
     end
     
   end
