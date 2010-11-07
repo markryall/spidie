@@ -26,6 +26,13 @@ def finish_tx
   @tx = nil
 end
 
+def rollback_tx
+  return unless @tx
+  @tx.failure
+  @tx.finish
+  @tx = nil
+end
+
 def new_tx
   finish_tx if @tx
   @tx = Neo4j::Transaction.new

@@ -55,7 +55,7 @@ module Spidie
     
     def populate_links html_content
       HtmlParser.new(self.url).extract_links(html_content).each do |link_url|
-        self.links << retrieve_or_create_page(link_url)
+        self.links << retrieve_or_create_page(link_url) unless link_url == self.url
       end
     end
     

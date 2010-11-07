@@ -4,7 +4,6 @@ describe "page retrieve" do
   before(:each) do
     new_tx
     
-    @page_links = stub('links')
     @url = "url"
     @page = Page.new :url => @url
 
@@ -23,7 +22,7 @@ describe "page retrieve" do
   end
   
   after(:each) do
-    finish_tx
+    rollback_tx
   end
 
   it "should retrieve a hearty page" do
@@ -38,18 +37,20 @@ describe "page retrieve" do
   end
   
   it "should populate links" do
-    links = ["http://link1", "http://link2"]
+    links = ["link1", "link2"]
     @http_parser.should_receive(:extract_links).with(@http_content).and_return links
-    @page.stub(:links).and_return @page_links
-    
-    links.each do |link|
-       linked_page = stub("linked page #{link}")
-       @page.should_receive(:retrieve_or_create_page).with(link).and_return(linked_page)
-       @page_links.should_receive(:<<).with(linked_page)
-    end
     
     @page.populate_links @http_content
     
+    @page.links.map{|p| p.url}.should =~ links
+  end
+  
+  it "should not store a link to itself" do
+    @http_parser.should_receive(:extract_links).with(@http_content).and_return ["link1", @url]
+    
+    @page.populate_links @http_content
+    
+    @page.links.map{|p| p.url}.should =~ ["link1"]
   end
 
   [401, 404, 500].each do |status|
