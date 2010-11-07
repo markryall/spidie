@@ -5,7 +5,6 @@ describe "page retrieve" do
     Spidie::Config[:search_domain] = ""
     new_tx
     
-    
     @url = "url"
     @page = Page.new :url => @url
 

@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+$: << File.dirname(__FILE__)+'/../lib'
+
+require 'rubygems'
+require 'resque'
+require 'spidie/report_job'
+
+Resque.enqueue Spidie::ReportJob
+
