@@ -9,8 +9,9 @@ module Spidie
 
     def extract_links html
       links = Nokogiri::HTML(html).css('a').map{|link| link['href']}.select{|url| url != nil}
+      links = links.reject{|link| link.strip.start_with? "#"}
       links.map do |link|
-        link = link.strip
+        link = link.strip.sub(/#.*$/, '')
         if is_link_valid? link
           convert link
         else

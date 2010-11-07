@@ -6,13 +6,13 @@ IDEAS
 - store status
 - store whether link is relative
 - store.good_pages includes pages we have not yet visited
-
-- throttle queue - install https://github.com/flyerhzm/resque-restriction 
 - make sure we can run the report after stopping spidie
+- don't follow links that are not qld gov 
+- page that links back on itself?
 
 sc:
-- don't follow links that are not qld gov 
-  - test dont run report til queue is empty
+
+
 
 sp:
 
@@ -22,6 +22,7 @@ procrastination
 - what is god
 - look at how resque plugin works
 - watch http://bit.ly/9TBuT4
+- buy some german oreilly books
 
 
 
