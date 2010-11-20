@@ -56,12 +56,16 @@ module Spidie
     
     def populate_links html_content
       HtmlParser.new(self.url).extract_links(html_content).each do |link_url|
-        self.links << retrieve_or_create_page(link_url) unless we_are_not_interested_in link_url
+        if we_are_not_interested_in link_url
+          log "not interested in #{link_url}"
+        else
+          self.links << retrieve_or_create_page(link_url)
+        end
       end
     end
-    
+
     def we_are_not_interested_in link_url
-      link_url == self.url or not link_url.include? Config[:search_domain]
+      link_url == self.url or not link_url.include? ENV['SEARCH_DOMAIN']
     end
     
   end

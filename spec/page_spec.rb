@@ -2,7 +2,7 @@ require File.dirname(__FILE__)+'/spec_helper'
 
 describe "page retrieve" do
   before(:each) do
-    Spidie::Config[:search_domain] = ""
+    ENV['SEARCH_DOMAIN'] = ""
     new_tx
     
     @url = "url"
@@ -55,7 +55,7 @@ describe "page retrieve" do
   end
   
   it "should not store links to sites outside of the search domain" do
-    Spidie::Config[:search_domain] = "qld.gov.au"
+    ENV['SEARCH_DOMAIN'] = "qld.gov.au"
     
     links = ["http://foo.com/sdf", "https://bla.qld.gov.au/sdfd"]
     @http_parser.should_receive(:extract_links).with(@http_content).and_return links
@@ -108,7 +108,4 @@ describe "page retrieve" do
     @page.broken.should == false
     @page.visited.should == false
   end
-  
-
-
 end

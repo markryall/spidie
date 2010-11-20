@@ -34,6 +34,7 @@ task :default do
   sh "rake acceptance_tests"
 end
 
+desc 'run unit and integration tests'
 task :spec => [:clean] do
   sh 'rspec spec'
 end
@@ -76,5 +77,5 @@ Pids.create_tasks :name => :test_web,
   :command => 'ruby spec/test_application.rb'
 
 Pids.create_tasks :name => :spidie,
-  :command => 'QUEUE=urls rake resque:work'
+  :command => 'QUEUE=urls SEARCH_DOMAIN=localhost rake resque:work'
   
