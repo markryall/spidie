@@ -56,8 +56,12 @@ task :resque_view do
   sh "open 'http://0.0.0.0:5678/overview'"
 end
 
+task :set_test_env do 
+    ENV['DOMAIN']='localhost'  
+end
+
 desc 'run acceptance tests, starts up spider and fake webserver first'
-task :acceptance_tests => [:check, :clean, "test_web:start", "redis:start", "spidie:start"] do
+task :acceptance_tests => [:check, :clean, :set_test_env, "test_web:start", "redis:start", "spidie:start"] do
   Pids.check_started "test_application.rb", lambda { HTTPClient.new.head("http://localhost:4567/page_with_two_working_links_and_two_broken.html").status == 200 }
   sh "rspec spec/end2end.rb"
 end
@@ -71,13 +75,12 @@ Pids.create_tasks :name => :test_web,
   :command => 'ruby spec/test_application.rb'
 
 Pids.create_tasks :name => :spidie,
-  :command => "QUEUE=urls DOMAIN=localhost rake resque:work"
-  
-Pids.create_tasks :name => :spidie_prod,
-  :command => "QUEUE=urls DOMAIN='qld.gov.au' rake resque:work"
+  :command => "QUEUE=urls rake resque:work"
 
 desc 'starts spidie' 
-task :start => ["redis:start", "spidie_prod:start"]
+task :start => ["redis:start", "spidie:start"] do
+    sh "touch tmp/spidie.log" # so we can start tailing it before it is used    
+end
 
 desc 'stops everything'
 task :stop => ["redis:stop", "spidie:stop"]
