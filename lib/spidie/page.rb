@@ -4,7 +4,6 @@ require 'nokogiri'
 require 'httpclient'
 require 'spidie/html_parser'
 require 'neo4j'
-require 'spidie/config'
 
 module Spidie
   class Page
@@ -65,7 +64,7 @@ module Spidie
     end
 
     def we_are_not_interested_in link_url
-      link_url == self.url or not link_url.include? ENV['SEARCH_DOMAIN']
+      link_url == self.url or not link_url.include? ENV['DOMAIN']
     end
     
   end

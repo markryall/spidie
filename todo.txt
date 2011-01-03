@@ -1,13 +1,14 @@
 PLAN
 
 - first goal:  starting with just one website, follow all links, find all the broken links, and know how many sites we have visited
-
+- report should say "x pages visitied, y were broken, here's a list of the broken page"
 - limit search to 100 nodes for dev so we can analyse results
 - document how to run spider and run the report
 - ensure we can run the report after the spider has stopped
 - store status so if we see 404 we have more confidence that these were real broken pages (not due to something else)
 
 IDEAS
+- report cd include how many of the broken links were relative (assume these are less important)
 - eventually want to feed google search results in - and would be interesting to know which google result spidie was up to (eg. it could crawl 500 pages just off the first google result)
 - some way to stop ensure the report job doesnt get stuck between 1000 url jobs (put reports in a different higher priority queue!)
 - create a relationship redirects_to for 302s and enqueue the redirect url
@@ -16,6 +17,7 @@ IDEAS
 - store.good_pages includes pages we have not yet visited
 - make sure we can run the report after stopping spidie
 - html page for report
+- generate stats as its running - need a better way of knowing how many nodes without traversing graph
 
 
 sc:
@@ -27,7 +29,7 @@ sp:
 
 DONE (please don't remove - i find this useful)
 
-- don't follow links that are not qld gov 
+- don't follow links that are not qld gov (doesnt enqueue them either) 
 
 
 

@@ -57,17 +57,11 @@ task :resque_view do
 end
 
 desc 'run acceptance tests, starts up spider and fake webserver first'
-task :acceptance_tests => [:check, :clean, :start] do
+task :acceptance_tests => [:check, :clean, "test_web:start", "redis:start", "spidie:start"] do
   Pids.check_started "test_application.rb", lambda { HTTPClient.new.head("http://localhost:4567/page_with_two_working_links_and_two_broken.html").status == 200 }
- 
   sh "rspec spec/end2end.rb"
 end
 
-desc 'starts everything'
-task :start
-
-desc 'stops everything'
-task :stop
 
 Pids.create_tasks :name => :redis,
   :full_command => 'redis-server /usr/local/etc/redis.conf',
@@ -77,5 +71,23 @@ Pids.create_tasks :name => :test_web,
   :command => 'ruby spec/test_application.rb'
 
 Pids.create_tasks :name => :spidie,
-  :command => 'QUEUE=urls SEARCH_DOMAIN=localhost rake resque:work'
+  :command => "QUEUE=urls DOMAIN=localhost rake resque:work"
   
+Pids.create_tasks :name => :spidie_prod,
+  :command => "QUEUE=urls DOMAIN='qld.gov.au' rake resque:work"
+
+desc 'starts spidie' 
+task :start => ["redis:start", "spidie_prod:start"]
+
+desc 'stops everything'
+task :stop => ["redis:stop", "spidie:stop"]
+
+desc 'enqueue task'
+task :enqueue do 
+   sh "bin/enspidie #{ENV['URL']}"
+end
+
+desc 'create a report'
+task :report do 
+   sh "bin/report" 
+end

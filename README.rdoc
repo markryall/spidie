@@ -17,16 +17,17 @@ Prerequisites (on mac os x) are set up as follows:
 
 In the first shell, start redis:
 
-    rake redis
+    DOMAIN=mydomain.com rake start
 
 In the second shell, start up the resque web interface
 
     resque-web
 
-In the third shell, start up a worker
+Enqueue some urls for spidie to crawl:
 
-    QUEUE=urls rake resque:work
+    URL=http://www.mydomain.com rake enqueue
 
-In the last, you can start enqueuing some urls for spidie to crawl:
+Generate a report, which you will find in tmp/report.json
 
-    ./bin/enspidie http://github.com/markryall/spidie
+    rake report
+

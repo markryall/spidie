@@ -2,7 +2,7 @@ require File.dirname(__FILE__)+'/spec_helper'
 
 describe "page retrieve" do
   before(:each) do
-    ENV['SEARCH_DOMAIN'] = ""
+    ENV['DOMAIN'] = ""
     new_tx
     
     @url = "url"
@@ -55,7 +55,7 @@ describe "page retrieve" do
   end
   
   it "should not store links to sites outside of the search domain" do
-    ENV['SEARCH_DOMAIN'] = "qld.gov.au"
+    ENV['DOMAIN'] = "qld.gov.au"
     
     links = ["http://foo.com/sdf", "https://bla.qld.gov.au/sdfd"]
     @http_parser.should_receive(:extract_links).with(@http_content).and_return links

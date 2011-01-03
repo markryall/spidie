@@ -35,9 +35,6 @@ module Pids
         end
       end
     end
-
-    task :stop => ["#{name}:stop"]
-    task :start => ["#{name}:start"]
   end
   
   def self.check_started app_name, check_function
@@ -48,7 +45,7 @@ module Pids
       rescue 
       end
       puts "waiting #{i} for #{app_name}"
-      sleep 2
+      sleep 3
     end
   end
 end
