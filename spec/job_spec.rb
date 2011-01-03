@@ -1,5 +1,6 @@
 require File.dirname(__FILE__)+'/spec_helper'
 
+
 describe Spidie::Job do
   before do
     @url = stub('url')
@@ -7,21 +8,24 @@ describe Spidie::Job do
     Job.stub!(:retrieve_or_create_page).with(@url).and_return @page
   end
 
-  it 'should only continue when the page does not already exist' do
+  it 'should not request page when the page has not yet been visited' do
     @page.should_receive(:visited).and_return true
     @page.should_not_receive :get_content_and_populate_links
     Job.perform @url
   end
 
-  it 'should fetch a page and enqueue the links which we have not yet visited' do
-    url1, url2 = stub('url1'), stub('url2')
-    page1, page2 = stub('page1', :url => url1, :visited => true), stub('page2', :url => url2, :visited => false)
-    @page.should_receive(:visited).and_return false
+  it 'should request a page and enqueue only the links which we have not yet visited' do
+    @page.stub(:visited).and_return false
     @page.should_receive(:get_content_and_populate_links)
-    @page.should_receive(:links).and_return [page1, page2]
 
-    Resque.should_not_receive(:enqueue).with(Job, url1)
-    Resque.should_receive(:enqueue).with(Job, url2)
+    visited_url = stub('visited_url') 
+    unvisited_url = stub('unvisited_url')
+    visited_page = stub('visited_page', :url => visited_url, :visited => true) 
+    unvisited_page = stub('unvisited_page', :url => unvisited_url, :visited => false)
+    @page.stub(:links).and_return [visited_page, unvisited_page]
+
+    Resque.should_not_receive(:enqueue).with(Job, visited_url)
+    Resque.should_receive(:enqueue).with(Job, unvisited_url)
 
     Job.perform @url
   end

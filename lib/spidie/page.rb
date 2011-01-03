@@ -12,7 +12,7 @@ module Spidie
     include Neo4j::NodeMixin
 
     property :url, :broken, :visited
-    index :url, :broken
+    index :url, :broken, :visited
 
     has_n(:links).to(Page)
     
@@ -20,8 +20,8 @@ module Spidie
       self[:url] = params[:url]
       self[:visited] = false
       self[:broken] = false
-      self[:visited] = params[:visited] if params[:visitied] 
-      self[:broken] = params[:broken] if params[:broken] 
+      self[:visited] = params[:visited] if params[:visited] != nil
+      self[:broken] = params[:broken] if params[:broken] != nil
     end
 
     def get_content_and_populate_links
@@ -29,12 +29,12 @@ module Spidie
       
       result = nil
       begin
-        log "GET request for #{self.url}" 
+        log "GET_REQUEST for #{self.url}" 
         result = client.get(self.url)
-        log "Status was #{result.status}"
+        log "GET_STATUS was #{result.status}"
       rescue Exception => e
         client.head("http://www.google.com")
-        log "error during GET: " + e.message
+        log "GET_ERROR was" + e.message
         self.broken = true
       end
       
@@ -44,7 +44,7 @@ module Spidie
             populate_links(result.content)
           when 302
             self.url = result.header['Location'].first
-            log "Changed url to #{self.url}"
+            log "REDIRECT to #{self.url}"
             links = self.get_and_populate_links
           else
             self.broken = true
@@ -56,7 +56,7 @@ module Spidie
     def populate_links html_content
       HtmlParser.new(self.url).extract_links(html_content).each do |link_url|
         if we_are_not_interested_in link_url
-          log "not interested in #{link_url}"
+          log "IGNORING_URL outside of domain #{link_url}"
         else
           self.links << retrieve_or_create_page(link_url)
         end

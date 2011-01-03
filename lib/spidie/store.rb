@@ -34,11 +34,11 @@ module Spidie
     end
 
     def broken_pages
-      Page.find(:broken => true)
+      Page.find(:broken => true, :visited => true)
     end
     
     def good_pages
-      Page.find(:broken => false)
+      Page.find(:broken => false, :visited => true)
     end
     
   end

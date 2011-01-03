@@ -21,9 +21,6 @@ module Spidie
         report.num_broken = report.broken_pages.count
       end
 
-      report_json = report.to_json
-
-      log report_json
       open('tmp/report.json', 'w') {|f| f.puts report.to_json }
     end
   end

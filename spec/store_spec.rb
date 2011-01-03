@@ -33,35 +33,27 @@ describe "spider database" do
     end
   end
   
-  it 'should list good_pages' do
+  it 'should list good_pages which we have visited that are not broken' do
     while_shopping do
-      Page.new :url => "good_page1", :broken => false
-      Page.new :url => "good_page2", :broken => false
-      Page.new :url => "broken_page", :broken => true
+      Page.new :url => "good_page", :broken => false, :visited => true
+      Page.new :url => "unvisited_page", :broken => false, :visited => false
+      Page.new :url => "broken_page", :broken => true, :visited => true
     end
     
     while_shopping do
-      result = good_pages    
-      result.count.should == 2
-      urls = result.map {|page| page.url}
-      urls.should include "good_page1"
-      urls.should include "good_page2"
+      good_pages.map {|page| page.url}.should == ["good_page"]
     end
   end
   
-  it 'should list broken_pages' do
+  it 'should list broken_pages which we have visited' do
     while_shopping do
-      Page.new :url => "broken_page1", :broken => true
-      Page.new :url => "broken_page2", :broken => true
-      Page.new :url => "good_page", :broken => false
+      Page.new :url => "broken_page", :broken => true, :visited => true
+      Page.new :url => "unvisited_page", :broken => false, :visited => false
+      Page.new :url => "good_page", :broken => false, :visited => true
     end
     
     while_shopping do
-      result = broken_pages
-      result.count.should == 2
-      urls = result.map {|page| page.url}
-      urls.should include "broken_page1"
-      urls.should include "broken_page2"
+      broken_pages.map {|page| page.url}.should == ["broken_page"]
     end
   end
   

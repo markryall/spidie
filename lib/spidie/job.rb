@@ -17,11 +17,11 @@ module Spidie
         while_shopping do
           page = retrieve_or_create_page url
           if page.visited
-            log "skipping already visited page"
+            log "SKIPPING already visited page"
           else
             page.get_content_and_populate_links
             page.links.each do |linked_page|
-              log "enqueing #{linked_page.url}"
+              log "ENQUEUING #{linked_page.url}"
               Resque.enqueue Spidie::Job, linked_page.url unless linked_page.visited
             end
           end

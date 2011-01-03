@@ -64,6 +64,7 @@ desc 'run acceptance tests, starts up spider and fake webserver first'
 task :acceptance_tests => [:check, :clean, :set_test_env, "test_web:start", "redis:start", "spidie:start"] do
   Pids.check_started "test_application.rb", lambda { HTTPClient.new.head("http://localhost:4567/page_with_two_working_links_and_two_broken.html").status == 200 }
   sh "rspec spec/end2end.rb"
+  Rake::Task[:stop].invoke
 end
 
 

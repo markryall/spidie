@@ -26,6 +26,14 @@ describe "page retrieve" do
     rollback_tx
   end
 
+  it "should initialise itself respectfully" do 
+    a_page = Page.new :url => "bla", :broken => true, :visited => true
+
+    a_page.url.should == "bla"
+    a_page.broken.should be_true
+    a_page.visited.should be_true
+  end
+
   it "should retrieve a hearty page" do
     @http_result.stub(:status).and_return 200
     @page.should_receive(:populate_links).with(@http_content)
